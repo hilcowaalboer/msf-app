@@ -260,7 +260,7 @@ function buildTakenOverzicht(){
   S.projects.filter(function(p){return !p.archived;}).map(function(p){
     var bc={Actief:"#e8760a",Gepland:"#2980b9",Afgerond:"#27ae60"}[p.status]||"#ccc";
     return '<div class="card" style="overflow:visible">'+
-      '<div style="padding:14px 18px;border-bottom:2px solid #eef1f6;display:flex;align-items:center;gap:12px;flex-wrap:wrap;cursor:pointer" onclick="openProj('+p.id+');setTab(\'taken\')">'+
+      '<div style="padding:14px 18px;border-bottom:2px solid #eef1f6;display:flex;align-items:center;gap:12px;flex-wrap:wrap;cursor:pointer" onclick="openProj('+p.id+');setTab(&quot;taken&quot;)">'+
       '<div style="width:5px;height:36px;border-radius:4px;background:'+bc+';flex-shrink:0"></div>'+
       '<div style="flex:1;min-width:0">'+
       '<div style="font-weight:800;font-size:15px;color:#1a2740;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(p.name)+'</div>'+

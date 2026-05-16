@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MSF Projecten</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#061f47;--navy2:#123d72;--blue:#0b5bd3;--orange:#f47b16;--orange2:#ff9d36;--green:#21a55b;--red:#ef4444;--bg:#f3f6fb;--card:#fff;--line:#d8e2f2;--text:#0b2146;--muted:#70809d;--shadow:0 8px 28px rgba(8,40,86,.08)}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:var(--bg);color:var(--text);font-family:'Open Sans',Arial,sans-serif;font-size:15px}button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}.hidden{display:none!important}.splash{position:fixed;inset:0;z-index:999;background:linear-gradient(150deg,#071f46,#173f73);display:grid;place-items:center;color:#fff}.splash>div{text-align:center}.splash img{width:108px;border-radius:22px;background:#fff;border:5px solid rgba(255,255,255,.22);box-shadow:0 16px 44px rgba(0,0,0,.3)}.splash h1{font-size:36px;margin:26px 0 8px}.splash p{letter-spacing:7px;color:#9fb3d1;font-weight:700}.spin{width:58px;height:58px;border-radius:50%;border:7px solid rgba(255,255,255,.22);border-top-color:var(--orange);margin:30px auto 0;animation:spin .85s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.top{height:88px;background:linear-gradient(135deg,#061f47,#123d72);display:flex;align-items:center;gap:22px;padding:0 24px;color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 8px 26px rgba(0,0,0,.2)}.brand{display:flex;align-items:center;gap:16px;min-width:300px}.logo{width:66px;height:66px;border-radius:15px;background:#fff;object-fit:cover;border:2px solid rgba(255,255,255,.3)}.brand h1{margin:0;font-size:28px;font-weight:800;line-height:1}.brand small{display:block;margin-top:5px;color:#c0cee3;font-size:15px}.live-dot{width:13px;height:13px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:7px}.searchbox{flex:1;max-width:760px;position:relative}.searchbox span{position:absolute;left:24px;top:18px;font-size:24px;color:#d6e2f3}.searchbox input{width:100%;height:68px;border-radius:18px;border:2px solid rgba(90,145,220,.65);background:rgba(255,255,255,.08);color:#fff;padding:0 24px 0 74px;font-size:24px;outline:none}.searchbox input:focus{border-color:#3b82f6;box-shadow:0 0 0 4px rgba(59,130,246,.22)}.top-icons{display:flex;align-items:center;gap:16px;margin-left:auto}.round{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08);color:#fff;font-size:27px;position:relative}.round .count{position:absolute;right:0;top:-5px;background:#ff6b1a;border-radius:99px;padding:2px 8px;font-size:14px;font-weight:800}.avatar{background:#9aa7ba;font-size:18px;font-weight:800}.avatar:after{content:'';position:absolute;right:5px;bottom:4px;width:14px;height:14px;background:#20c568;border:3px solid #123d72;border-radius:50%}.navrow{height:72px;background:linear-gradient(135deg,#082856,#123d72);display:flex;align-items:center;gap:30px;padding:0 28px;color:#fff;position:sticky;top:88px;z-index:40;box-shadow:0 6px 18px rgba(8,40,86,.12)}.navbtn{height:48px;padding:0 19px;border-radius:10px;background:transparent;color:#e4edf9;font-weight:800;font-size:17px;display:flex;align-items:center;gap:9px}.navbtn:hover,.navbtn.on{background:linear-gradient(135deg,#ef6c0f,#ff9f3d);box-shadow:0 10px 22px rgba(244,123,22,.28);color:#fff}.logout{height:44px;border:2px solid rgba(255,255,255,.28);border-radius:12px;background:transparent;color:#e4edf9;padding:0 15px;font-weight:800}
+.page{max-width:1540px;margin:0 auto;padding:30px 24px 40px}.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:26px}.hero h2{margin:0 0 8px;font-size:31px;letter-spacing:-.5px}.hero p{margin:0;color:var(--muted);font-size:17px}.btn{height:48px;padding:0 20px;border-radius:12px;background:linear-gradient(135deg,#123d72,#0b5bd3);color:#fff;font-weight:800;box-shadow:0 8px 18px rgba(11,91,211,.16);white-space:nowrap}.btn.orange{background:linear-gradient(135deg,#ef6c0f,#ff9f3d);box-shadow:0 10px 22px rgba(244,123,22,.25)}.btn.light{background:#fff;color:var(--text);border:1px solid var(--line);box-shadow:none}.btn.danger{background:#fff5f5;color:var(--red);border:1px solid #ffcaca;box-shadow:none}.card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.home-layout{display:grid;grid-template-columns:minmax(0,1fr) 440px;gap:20px}.home-main{padding:24px 26px}.home-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.home-head h3{font-size:25px;margin:0}.tabs{display:flex;gap:10px;flex-wrap:wrap}.tab{height:42px;padding:0 20px;border-radius:9px;background:#fff;border:1px solid #e0e7f2;color:#0b2146;font-weight:800}.tab.on{background:linear-gradient(135deg,#ef6c0f,#ff9f3d);color:#fff;border-color:transparent}.project-list-big{display:flex;flex-direction:column;gap:14px}.project-row{display:grid;grid-template-columns:170px 1fr 120px 28px;gap:22px;align-items:center;border:1px solid #e1e7f1;border-radius:12px;padding:12px 16px;min-height:150px;transition:.15s}.project-row:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(8,40,86,.1)}.project-img{width:170px;height:116px;border-radius:9px;object-fit:cover;background:linear-gradient(135deg,#d8e2f2,#fff)}.project-title{font-size:20px;font-weight:800;margin-bottom:12px}.project-meta{display:flex;gap:34px;flex-wrap:wrap;color:#33486c;font-size:15px}.progress{height:9px;background:#e0e5ee;border-radius:999px;overflow:hidden;margin:11px 0}.progress i{display:block;height:100%;background:#123d72;border-radius:999px}.progress.green i{background:var(--green)}.progress.orange i{background:#ef9a18}.badge{display:inline-flex;align-items:center;justify-content:center;border-radius:9px;padding:10px 16px;font-weight:800}.badge.actief{background:#dff4e9;color:#14723c}.badge.gepland{background:#fff1cf;color:#946100}.badge.afgerond{background:#dff4e9;color:#14723c}.chev{font-size:34px;color:#556b8d}.side{display:flex;flex-direction:column;gap:20px}.side-card{padding:26px}.side-card h3{font-size:24px;margin:0 0 22px}.line{display:flex;justify-content:space-between;align-items:center;padding:9px 0;color:#263a5e}.line strong{font-size:17px}.person{display:flex;align-items:center;gap:14px;padding:11px 0}.bubble{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;background:#123d72;font-weight:800;flex:0 0 auto}.bubble.orange{background:#f47b16}.bubble.green{background:#21a55b}.bubble.purple{background:#7b47b8}.online{width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:7px}.offline{background:#f97316}.more{display:block;margin:14px auto 0;height:42px;padding:0 22px;border-radius:9px;background:#fff;border:1px solid #e0e7f2;color:#123d72;font-weight:800}.bottom-grid{display:grid;grid-template-columns:1fr 1.7fr;gap:20px;margin-top:20px}.small-panel{padding:24px}.small-panel h3{font-size:23px;margin:0 0 16px}.activity{padding:10px 0;border-bottom:1px solid #edf1f7;color:#33486c}
+.toolbar{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:14px;padding:16px 20px;margin-bottom:18px;overflow-x:auto}.toolbar label{font-weight:800}.toolbar select,.toolbar input{height:44px;border:1px solid #d9e2f1;border-radius:9px;padding:0 16px;color:#0b2146;background:#fff;min-width:180px;outline:none}.toolbar input{min-width:280px}.tasks-layout{display:grid;grid-template-columns:410px minmax(700px,1fr);gap:16px}.tasks-projects{padding:22px;max-height:calc(100vh - 260px);overflow:auto}.mini-project{display:grid;grid-template-columns:95px 1fr;gap:14px;padding:14px;border-radius:14px;margin-bottom:14px;border-left:5px solid transparent;cursor:pointer}.mini-project.on{background:#eef5ff;border-left-color:#0b5bd3}.mini-project img{width:95px;height:85px;border-radius:9px;object-fit:cover;background:#e5ecf6}.mini-project h4{margin:0 0 7px;font-size:17px}.task-table-wrap{padding:26px;overflow:auto;max-height:calc(100vh - 260px)}.task-head{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:22px}.task-head h3{margin:0;font-size:25px}.chips{display:flex;gap:10px;flex-wrap:wrap}.chip{padding:7px 13px;border-radius:999px;background:#f1f4f8;font-weight:800}.chip.green{background:#e1f5ea;color:#15914c}.chip.blue{background:#e3efff;color:#0b5bd3}.table{border-collapse:collapse;width:100%;min-width:920px}.table th{color:#50617f;font-size:13px;text-align:left;padding:13px;border-bottom:1px solid var(--line)}.table td{padding:16px 13px;border-bottom:1px solid #edf1f7;font-weight:700;white-space:nowrap}.check{width:17px;height:17px}.prio{width:9px;height:9px;border-radius:50%;background:#0b5bd3;display:inline-block;margin-right:8px}.prio.high{background:#f97316}.status-pill{padding:7px 12px;border-radius:999px;font-weight:800;background:#eef2f7;color:#52627f}.status-pill.done{background:#dff4e9;color:#178242}.status-pill.busy{background:#e3efff;color:#0b5bd3}.table-scroll-note{color:#70809d;margin-top:14px}.pager{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}.pager button{height:40px;min-width:40px;border-radius:9px;background:#fff;border:1px solid #d9e2f1;color:#123d72;font-weight:800}.pager button.on{background:#0b5bd3;color:#fff}.admin-tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:24px;overflow-x:auto}.admin-tabs button{background:transparent;color:#344766;font-weight:800;padding:15px 14px;border-bottom:3px solid transparent;white-space:nowrap}.admin-tabs button.on{color:#f06a00;border-bottom-color:#f06a00}.admin-grid{display:grid;grid-template-columns:360px minmax(720px,1fr) 300px;gap:16px}.stack{display:flex;flex-direction:column;gap:16px}.admin-box{padding:20px}.admin-box h3{font-size:18px;margin:0 0 15px}.quick-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.quick{border-radius:12px;padding:16px 8px;text-align:center;background:#f3f8ff}.quick strong{font-size:25px;display:block;margin:6px 0}.admin-table-scroll{overflow:auto}.admin-table{width:100%;min-width:760px;border-collapse:collapse}.admin-table th,.admin-table td{padding:14px 12px;border-bottom:1px solid #edf1f7;text-align:left;font-size:13px}.pill{padding:6px 11px;border-radius:7px;background:#eaf2ff;color:#0b5bd3;font-weight:800}.pill.green{background:#e5f7ed;color:#14964b}.pill.purple{background:#efe7ff;color:#7a42b8}.iconbtn{width:36px;height:36px;border-radius:8px;border:1px solid #bdd0ed;background:#fff;color:#0b5bd3}.iconbtn.danger{border-color:#ffcaca;color:#ef4444}.action-list button{width:100%;display:flex;justify-content:space-between;align-items:center;background:#fff;border-bottom:1px solid #edf1f7;text-align:left;padding:14px 8px;color:#20365f;font-weight:800}.role-line{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #edf1f7}.footer{margin-top:24px;text-align:center;color:#7e8ca5;font-size:12px}.modal-bg{position:fixed;inset:0;background:rgba(5,17,38,.72);z-index:100;display:grid;place-items:center;padding:20px}.modal{background:#fff;border-radius:18px;width:min(720px,96vw);max-height:92vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.32)}.modal-title{background:linear-gradient(135deg,#123d72,#0b5bd3);color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center}.modal-title h3{margin:0}.modal-body{padding:22px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{margin-bottom:13px}.field label{display:block;color:#123d72;font-weight:800;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;height:46px;border:1px solid #d9e2f1;border-radius:12px;padding:0 13px;outline:none}.field textarea{height:86px;padding:10px 13px}.modal-actions{display:flex;gap:10px;margin-top:10px}.mapbox{height:600px;border-radius:18px;overflow:hidden}.login{min-height:100vh;background:linear-gradient(150deg,#071f46,#143d72);display:grid;place-items:center;color:#fff}.login-card{width:min(470px,92vw);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:22px;padding:26px}.login-head{text-align:center;margin-bottom:18px}.login-head img{width:90px;background:#fff;border-radius:18px}.users{display:grid;grid-template-columns:1fr 1fr;gap:8px}.user-btn{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:12px;padding:10px;text-align:left}.user-btn.on{border-color:#ff8a24;background:rgba(244,123,22,.18)}.login-card input{width:100%;height:48px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff;padding:0 14px;margin-top:13px}.toast{position:fixed;left:50%;bottom:25px;transform:translateX(-50%);background:#123d72;color:#fff;padding:13px 20px;border-radius:12px;font-weight:800;display:none;z-index:200}.nowrap-scroll{overflow:auto}.logo-small{width:44px;height:44px;border-radius:8px;background:#fff;object-fit:cover}@media(max-width:1180px){.top{height:auto;flex-wrap:wrap;padding:14px}.navrow{top:0;position:relative;overflow-x:auto}.brand{min-width:250px}.searchbox{order:3;max-width:none;flex-basis:100%}.home-layout,.tasks-layout,.admin-grid,.bottom-grid{grid-template-columns:1fr}.project-row{grid-template-columns:120px 1fr}.project-img{width:120px;height:90px}.project-row .badge,.project-row .chev{display:none}.quick-stats{grid-template-columns:repeat(2,1fr)}.side{display:grid;grid-template-columns:repeat(2,1fr)}.tasks-projects,.task-table-wrap{max-height:none}.page{padding:22px 14px}.toolbar{flex-wrap:nowrap}.hero{flex-direction:column}.home-head{flex-direction:column;align-items:flex-start}.side{display:flex}.form-grid{grid-template-columns:1fr}}
+
+/* v2.3 werkende layout updates */
+body{overflow-y:auto}.page{width:min(1540px,100%);min-height:calc(100vh - 160px);overflow:visible}.navrow{overflow-x:auto;scrollbar-width:thin}.navrow::-webkit-scrollbar{height:6px}.navrow::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25);border-radius:99px}.home-layout,.tasks-layout,.admin-layout{align-items:start}.home-main,.side-card,.small-panel,.admin-box,.task-table-wrap,.tasks-projects{min-width:0}.project-list-big{max-height:none}.project-row{cursor:pointer}.project-row:focus{outline:3px solid rgba(11,91,211,.25)}.project-img{border:1px solid #d6e2f1}.map-preview{height:185px;border-radius:14px;border:1px solid var(--line);background:#eef4fb;overflow:hidden;margin-top:8px}.map-preview img{width:100%;height:100%;object-fit:cover;display:block}.project-address-line{margin-top:6px;color:#52657f;font-size:14px}.field input[readonly]{background:#f7f9fd;color:#52657f}.table-shell,.admin-table-scroll{overflow:auto;-webkit-overflow-scrolling:touch}.table-shell:after,.admin-table-scroll:after{content:'⇆ horizontaal scrollbaar';display:block;color:#71809a;font-size:12px;margin-top:8px}.mapbox{height:calc(100vh - 245px);min-height:520px}.modal{max-height:92vh}.modal-body{max-height:calc(92vh - 78px);overflow:auto}.modal-actions{position:sticky;bottom:0;background:#fff;padding-top:12px}.actionbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.addr-help{font-size:12px;color:#70809d;margin-top:5px}.readonly-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:1100px){.top{height:auto;min-height:88px;flex-wrap:wrap;padding:14px 16px}.brand{min-width:220px}.searchbox{order:3;max-width:none;flex-basis:100%}.navrow{top:116px}.home-layout,.tasks-layout,.admin-layout,.bottom-grid{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}.project-row{grid-template-columns:130px 1fr 100px 20px}.project-img{width:130px;height:100px}.tasks-projects,.task-table-wrap{max-height:none}.admin-box>div[style*="display:grid"]{grid-template-columns:1fr!important}}@media(max-width:720px){.brand h1{font-size:22px}.logo{width:54px;height:54px}.searchbox input{height:54px;font-size:17px;padding-left:55px}.searchbox span{left:18px;top:13px}.navbtn{font-size:14px}.home-head,.hero,.task-head{flex-direction:column;align-items:flex-start}.project-row{grid-template-columns:1fr;gap:10px}.project-img{width:100%;height:170px}.side{display:block}.readonly-row,.form-grid{grid-template-columns:1fr!important}.top-icons{gap:8px}.round{width:46px;height:46px}.page{padding:18px 12px}.toolbar{align-items:stretch}.toolbar input,.toolbar select{min-width:220px}.mapbox{height:520px}}
+
+/* v23 fixes: compact beheer, project detail, remembered login, better maps */
+.admin-compact{padding-top:22px;padding-bottom:18px}
+.admin-compact .hero{margin-bottom:12px}
+.admin-compact .hero h2{font-size:28px}
+.admin-compact .admin-tabs{margin-bottom:14px}
+.admin-compact .admin-grid{grid-template-columns:320px minmax(620px,1fr) 280px;gap:12px}
+.admin-compact .admin-box{padding:14px}
+.admin-compact .admin-box h3{margin-bottom:10px;font-size:17px}
+.admin-compact .quick{padding:10px 6px}
+.admin-compact .quick strong{font-size:22px;margin:4px 0}
+.admin-compact .line{padding:6px 0}
+.admin-compact .activity{padding:7px 0;font-size:12px}
+.admin-compact .admin-table th,.admin-compact .admin-table td{padding:8px 9px;font-size:12px}
+.admin-compact .bubble{width:34px;height:34px;font-size:12px}
+.admin-compact .action-list button{padding:10px 6px;font-size:12px}
+.admin-compact .role-line{padding:8px 0;font-size:12px}
+.project-detail-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(380px,.85fr);gap:20px;align-items:start}
+.detail-hero-card{padding:24px;overflow:hidden}.detail-hero-card img{width:100%;height:260px;object-fit:cover;border-radius:14px;border:1px solid var(--line);background:#eef3fb}.detail-title-row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin:18px 0 8px}.detail-title-row h3{font-size:28px;margin:0}.detail-meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}.detail-meta{background:#f6f9fd;border:1px solid #e2e9f4;border-radius:12px;padding:14px}.detail-meta small{display:block;color:var(--muted);font-weight:800;margin-bottom:4px}.detail-map{height:360px;border-radius:18px;overflow:hidden}.detail-side{display:flex;flex-direction:column;gap:16px}.compact-page{min-height:calc(100vh - 160px);overflow:auto}.remember-row{display:flex;align-items:center;gap:8px;margin-top:10px;color:#dbe8f8;font-size:13px}.remember-row input{width:16px!important;height:16px!important;margin:0!important}.project-row{cursor:pointer}.map-status{padding:10px 12px;border-radius:10px;background:#eef8f0;color:#13753a;font-weight:800;margin-top:10px}.map-status.warn{background:#fff7df;color:#8a5c00}
+@media(max-width:1180px){.project-detail-grid{grid-template-columns:1fr}.admin-compact .admin-grid{grid-template-columns:1fr}.detail-meta-grid{grid-template-columns:1fr}}
+
+.notif-panel{position:absolute;right:0;top:52px;width:290px;background:#fff;border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.18);border:1px solid #D0D8E8;z-index:500;overflow:hidden}
+.notif-head{padding:11px 15px;border-bottom:1px solid #EEF1F8;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:13px;color:#1B2B4B}
+.notif-head button{border:none;background:#F2F4F8;color:#6B7A99;cursor:pointer;font-size:11px;padding:3px 8px;border-radius:6px;font-family:inherit}
+.notif-item{padding:9px 15px;border-bottom:1px solid #EEF1F8}
+.notif-item.unread{background:rgba(27,58,107,.04)}
+.notif-msg{font-size:12px;color:#1B2B4B}
+.notif-item.unread .notif-msg{font-weight:600}
+.notif-time{font-size:10px;color:#6B7A99;margin-top:2px}
+.notif-empty{padding:14px;text-align:center;color:#6B7A99;font-size:12px}
+.notif-btn-wrap{position:relative}
+.team-row{cursor:pointer}.team-row:hover{background:#F5F7FB}
+
+</style>
+</head>
+<body>
+<div id="splash" class="splash"><div><img src="https://www.meesterschildersfriesland.nl/wp-content/uploads/2024/12/MSF-logo-vierkant.jpg" onerror="this.style.display='none'"><h1>MSF Projecten</h1><p>MEESTERSCHILDERS FRIESLAND BV</p><div class="spin"></div></div></div>
+<div id="app"></div><div id="toast" class="toast"></div>
+<script>
+(function(){'use strict';
+
+// ── SUPABASE ─────────────────────────────────────────────────────────────
+var SB_URL='https://eamjfckysanjctvnjhlm.supabase.co';
+var SB_KEY='sb_publishable_oW_N-yKcKNmPjulaYXygGw_qMPF1YSI';
+function sbH(){return{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'};}
+function sbGet(table,query){return fetch(SB_URL+'/rest/v1/'+table+'?'+(query||''),{headers:sbH()}).then(function(r){if(!r.ok)throw r;return r.json();});}
+function sbPost(table,data){return fetch(SB_URL+'/rest/v1/'+table,{method:'POST',headers:sbH(),body:JSON.stringify(data)}).then(function(r){if(!r.ok)throw r;return r.json();});}
+function sbPatch(table,id,data){return fetch(SB_URL+'/rest/v1/'+table+'?id=eq.'+id,{method:'PATCH',headers:sbH(),body:JSON.stringify(data)}).then(function(r){if(!r.ok)throw r;return r.json();});}
+function sbDel(table,id){return fetch(SB_URL+'/rest/v1/'+table+'?id=eq.'+id,{method:'DELETE',headers:sbH()}).then(function(r){if(!r.ok)throw r;return r;});}
+
+// Project fields: id, naam, adres, postcode, city, status, voortgang, start_datum, eind_datum, teamleden, notities, gearchiveerd
+// Task fields: id, project_id, titel, toegewezen_aan, deadline, status, prioriteit, afgerond
+
+function mapProject(p){return{id:p.id,name:p.naam||p.name||'',address:p.adres||p.address||'',postcode:p.postcode||'',city:p.city||'',status:p.status||'Gepland',progress:p.voortgang||p.progress||0,start:p.start_datum||p.start||'',end:p.eind_datum||p.end||'',assignees:p.teamleden||p.assignees||[],notes:p.notities||p.notes||'',img:p.img||null,lat:p.lat||null,lon:p.lon||null};}
+function mapTask(t){return{id:t.id,project_id:t.project_id,title:t.titel||t.title||'',assignee:t.toegewezen_aan||t.assignee||null,deadline:t.deadline||'',status:t.status||'Open',priority:t.prioriteit||t.priority||'Normaal'};}
+
+var _pollId=null;
+function startPolling(){
+  stopPolling();
+  _pollId=setInterval(function(){
+    var el=document.activeElement;
+    if(el&&(el.tagName==='INPUT'||el.tagName==='TEXTAREA'))return;
+    syncDown(false);
+  },6000);
+}
+function stopPolling(){if(_pollId){clearInterval(_pollId);_pollId=null;}}
+
+function syncDown(showLoader){
+  return Promise.all([
+    sbGet('projecten','order=aangemaakt_op.desc').catch(function(){return null;}),
+    sbGet('taken','order=aangemaakt_op.asc').catch(function(){return null;})
+  ]).then(function(results){
+    var projs=results[0],tasks=results[1];
+    if(projs&&Array.isArray(projs)&&projs.length>=0){
+      PROJECTS=projs.map(mapProject);
+      saveProjects(null);
+    }
+    if(tasks&&Array.isArray(tasks)&&tasks.length>=0){
+      TASKS=tasks.map(mapTask);
+      saveTasks(null);
+    }
+    if(showLoader!==false)render();
+    return {projects:PROJECTS,tasks:TASKS};
+  }).catch(function(e){console.warn('Sync mislukt:',e);});
+}
+
+function sbSaveProject(p){
+  var data={naam:p.name,adres:p.address,postcode:p.postcode,city:p.city,status:p.status,voortgang:p.progress,start_datum:p.start||null,eind_datum:p.end||null,teamleden:p.assignees||[],notities:p.notes||'',lat:p.lat||null,lon:p.lon||null};
+  var existing=typeof p.id==='number'&&p.id<1700000000000;
+  if(existing){return sbPatch('projecten',p.id,data).catch(function(){});}
+  else{return sbPost('projecten',data).then(function(res){if(res&&res[0])p.id=res[0].id;return res;}).catch(function(){});}
+}
+
+function sbSaveTask(t){
+  var data={project_id:t.project_id,titel:t.title,toegewezen_aan:t.assignee||null,deadline:t.deadline||null,status:t.status||'Open',prioriteit:t.priority||'Normaal'};
+  var existing=typeof t.id==='number'&&t.id<1700000000000;
+  if(existing){return sbPatch('taken',t.id,data).catch(function(){});}
+  else{return sbPost('taken',data).then(function(res){if(res&&res[0])t.id=res[0].id;return res;}).catch(function(){});}
+}
+
+function sbDelProject(id){return sbDel('projecten',id).catch(function(){});}
+function sbDelTask(id){return sbDel('taken',id).catch(function(){});}
+
+var TEAM=[
+{id:1,name:'Menno Boels',role:'Directeur',av:'MB',color:'#123d72',pw:'msf-menno2026',admin:false,email:'m.boels@meesterschildersfriesland.nl'},
+{id:2,name:'Arjen Huitenga',role:'Projectleider',av:'AH',color:'#f47b16',pw:'msf-arjen2026',admin:false,email:'a.huitenga@meesterschildersfriesland.nl'},
+{id:3,name:'Marten Hospes',role:'Projectleider',av:'MH',color:'#21a55b',pw:'msf-marten2026',admin:false,email:'m.hospes@meesterschildersfriesland.nl'},
+{id:4,name:'Hilco Waalboer',role:'Calculator / Planvoorbereider',av:'HW',color:'#7b47b8',pw:'msf-hilco2026',admin:true,email:'h.waalboer@meesterschildersfriesland.nl'},
+{id:5,name:'Patrick Kortekaas',role:'Werkvoorbereider',av:'PK',color:'#1786c8',pw:'msf-patrick2026',admin:false,email:'p.kortekaas@meesterschildersfriesland.nl'},
+{id:6,name:'Sabine Loeff',role:'Woonconsulent',av:'SL',color:'#c5542b',pw:'msf-sabine2026',admin:false,email:'s.loeff@meesterschildersfriesland.nl'},
+{id:7,name:'Liesbeth Bloemhof',role:'Administratie',av:'LB',color:'#5d6bc8',pw:'msf-liesbeth2026',admin:false,email:'l.bloemhof@meesterschildersfriesland.nl'}];
+var IMGS=['https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=70','https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=600&q=70','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=70','https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=600&q=70'];
+var PROJECTS_DEFAULT=[
+{id:1,name:'Boornesbfreder 27 Harlingen',address:'Boornesbfreder 27',postcode:'8861AA',city:'Harlingen',status:'Actief',progress:65,start:'2026-05-12',end:'',assignees:[1,4],notes:'',img:IMGS[0]},
+{id:2,name:'Woning renovatie Franeker',address:'Voorstraat 18',postcode:'8801AB',city:'Franeker',status:'Actief',progress:40,start:'2026-06-01',end:'',assignees:[2,3],notes:'',img:IMGS[1]},
+{id:3,name:'Appartementen complex Leeuwarden',address:'Achterstraat 14',postcode:'8911GC',city:'Leeuwarden',status:'Gepland',progress:15,start:'2026-04-20',end:'',assignees:[2,3,5,6],notes:'',img:IMGS[2]},
+{id:4,name:'huis',address:'Ijippeblom 9',postcode:'9212PA',city:'Boornbergum',status:'Actief',progress:65,start:'2026-05-01',end:'2026-06-15',assignees:[2],notes:'Schilderwerk woonhuis.',img:IMGS[3]},
+{id:5,name:'Woonhuis Leeuwarden – Buitenschilderwerk',address:'Achterstraat 14',postcode:'8911GC',city:'Leeuwarden',status:'Actief',progress:55,start:'2026-05-01',end:'2026-05-28',assignees:[2,3,5],notes:'Buitenonderhoud.',img:IMGS[1]},
+{id:6,name:'gemeentewerf Ballum',address:'Reeweg 4',postcode:'9162ED',city:'Ballum',status:'Gepland',progress:0,start:'',end:'',assignees:[4],notes:'',img:IMGS[0]},
+{id:7,name:'Appartementencomplex Heerenveen',address:'Van Harinxmaweg 22',postcode:'8442CA',city:'Heerenveen',status:'Afgerond',progress:100,start:'2026-03-01',end:'2026-04-25',assignees:[2,3,5,6],notes:'',img:IMGS[2]}
+];
+var TASKS_DEFAULT=[
+{id:1,project_id:4,title:'Inspectie en opname',assignee:4,deadline:'2026-05-10',status:'Voltooid',priority:'Hoog'},
+{id:2,project_id:4,title:'Offerte opstellen',assignee:2,deadline:'2026-05-12',status:'Voltooid',priority:'Normaal'},
+{id:3,project_id:4,title:'Steiger plaatsen',assignee:3,deadline:'2026-05-15',status:'Voltooid',priority:'Hoog'},
+{id:4,project_id:4,title:'Buitenschilderwerk begane grond',assignee:4,deadline:'2026-05-25',status:'In uitvoering',priority:'Hoog'},
+{id:5,project_id:4,title:'Buitenschilderwerk verdieping',assignee:2,deadline:'2026-06-05',status:'In uitvoering',priority:'Normaal'},
+{id:6,project_id:4,title:'Kozijnen afkitten',assignee:3,deadline:'2026-06-10',status:'Te doen',priority:'Normaal'},
+{id:7,project_id:4,title:'Oplevering en controle',assignee:4,deadline:'2026-06-15',status:'Te doen',priority:'Hoog'},
+{id:8,project_id:4,title:'Facturatie',assignee:2,deadline:'2026-06-16',status:'Te doen',priority:'Normaal'}];
+var FRIESLAND={'Leeuwarden':[53.2012,5.7999],'Franeker':[53.1879,5.5434],'Harlingen':[53.1742,5.4252],'Boornbergum':[53.1286,6.0544],'Ballum':[53.4457,5.6500],'Heerenveen':[52.9597,5.9186],'Bolsward':[53.0676,5.5285],'Drachten':[53.1127,6.0997]};
+var S={user:null,page:'home',modal:null,loginSel:null,loginErr:'',search:'',taskProjectId:null,adminTab:'overview',map:null,notifs:[],showNotifs:false,selectedMember:null};
+var app=document.getElementById('app');
+function load(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+var PROJECTS=load('msf_projects_v23',PROJECTS_DEFAULT);
+var TASKS=load('msf_tasks_v23',TASKS_DEFAULT);
+// Supabase sync starts after login
+function saveProjects(changedProject){
+  save('msf_projects_v23',PROJECTS);
+  if(changedProject)sbSaveProject(changedProject).catch(function(){});
+}
+function saveTasks(changedTask){
+  save('msf_tasks_v23',TASKS);
+  if(changedTask)sbSaveTask(changedTask).catch(function(){});
+}
+
+function esc(s){return String(s||'').replace(/[&<>\"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}function byId(id){return document.getElementById(id)}function person(id){return TEAM.find(function(x){return x.id==id})||TEAM[0]}function project(id){return PROJECTS.find(function(x){return x.id==id})||PROJECTS[0]}function initials(m,cls){return '<span class="bubble '+(cls||'')+'" style="background:'+esc(m.color||'#123d72')+'">'+esc(m.av)+'</span>'}function toast(t){var e=byId('toast');e.textContent=t;e.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(function(){e.style.display='none'},2500)}function fmt(d){if(!d)return '';var p=d.split('-');return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:d}
+
+function normalizeCity(c){c=String(c||'').trim();if(!c)return '';var k=Object.keys(FRIESLAND).find(function(x){return x.toLowerCase()===c.toLowerCase()});return k||c.charAt(0).toUpperCase()+c.slice(1)}
+function postcodeCity(pc){pc=String(pc||'').replace(/\s+/g,'').toUpperCase();var p4=pc.slice(0,4);var map={'8911':'Leeuwarden','8912':'Leeuwarden','8913':'Leeuwarden','8801':'Franeker','8861':'Harlingen','9212':'Boornbergum','9213':'Boornbergum','9162':'Ballum','8441':'Heerenveen','8442':'Heerenveen','8701':'Bolsward','9201':'Drachten'};return map[p4]||''}
+function coordsForProject(p){if(p&&p.lat&&p.lon)return [Number(p.lat),Number(p.lon)];var pc=String((p&&p.postcode)||'').replace(/\s/g,'').toUpperCase();var pc4=pc.substring(0,4);var PC={'9212':[53.1836,5.9964],'8911':[53.2012,5.7999],'8912':[53.2012,5.7999],'9162':[53.4457,5.6500],'8441':[52.9597,5.9186],'8701':[53.0676,5.5285]};if(PC[pc4])return PC[pc4];var city=normalizeCity(p.city)||postcodeCity(p.postcode);if(FRIESLAND[city])return FRIESLAND[city];var addr=String((p.address||'')+' '+(p.postcode||'')+' '+(p.city||'')).toLowerCase();var found=Object.keys(FRIESLAND).find(function(c){return addr.indexOf(c.toLowerCase())>-1});return found?FRIESLAND[found]:[53.1,5.85]}
+function latLonToTile(lat,lon,zoom){
+  var n=Math.pow(2,zoom);
+  var x=Math.floor((lon+180)/360*n);
+  var latR=lat*Math.PI/180;
+  var y=Math.floor((1-Math.log(Math.tan(latR)+1/Math.cos(latR))/Math.PI)/2*n);
+  return {x:x,y:y,z:zoom};
+}
+function staticMapUrl(p,w,h,z){
+  var c=coordsForProject(p);
+  z=z||15;
+  var t=latLonToTile(c[0],c[1],z);
+  // Use multiple tiles via a reliable CDN
+  var s=['a','b','c'][Math.abs(t.x+t.y)%3];
+  return 'https://'+s+'.tile.openstreetmap.org/'+z+'/'+t.x+'/'+t.y+'.png';
+}
+function projectImage(p){return staticMapUrl(p,340,232,(p&&p.lat&&p.lon)?17:15)}
+function geocodeProject(p,cb){var q=fullAddress(p);if(!q){if(cb)cb(null);return}var key='geo_'+q.toLowerCase();var cached=load(key,null);if(cached&&cached.lat&&cached.lon){p.lat=cached.lat;p.lon=cached.lon;if(cb)cb(cached);return}fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=nl&q='+encodeURIComponent(q),{headers:{'Accept':'application/json'}}).then(function(r){return r.json()}).then(function(d){if(d&&d[0]){var c={lat:parseFloat(d[0].lat),lon:parseFloat(d[0].lon)};p.lat=c.lat;p.lon=c.lon;save(key,c);if(cb)cb(c)}else if(cb)cb(null)}).catch(function(){if(cb)cb(null)})}
+function fullAddress(p){return [p.address,p.postcode,normalizeCity(p.city)].filter(Boolean).join(', ')}
+function stat(c){return PROJECTS.filter(function(p){return p.status===c}).length}function filteredProjects(){var q=S.search.toLowerCase().trim();if(!q)return PROJECTS;return PROJECTS.filter(function(p){return (p.name+' '+p.address+' '+p.postcode+' '+p.city+' '+p.status).toLowerCase().indexOf(q)>-1})}
+function bell(){
+  try{
+    var ctx=new(window.AudioContext||window.webkitAudioContext)();
+    [1047,1319,1568].forEach(function(f,i){
+      var o=ctx.createOscillator(),gn=ctx.createGain();
+      o.connect(gn);gn.connect(ctx.destination);
+      o.type='sine';o.frequency.value=f;
+      var t=ctx.currentTime+i*0.12;
+      gn.gain.setValueAtTime(0,t);
+      gn.gain.linearRampToValueAtTime(0.2,t+0.02);
+      gn.gain.exponentialRampToValueAtTime(0.001,t+0.35);
+      o.start(t);o.stop(t+0.4);
+    });
+  }catch(e){}
+}
+function nowT(){return new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'});}
+function addNotif(msg,playSound,onlyForUserId){
+  if(onlyForUserId&&S.user&&S.user.id!==onlyForUserId)return;
+  S.notifs.unshift({id:Date.now(),text:msg,time:nowT(),read:false});
+  if(S.notifs.length>40)S.notifs.pop();
+  if(playSound)bell();
+  var b=document.getElementById('notif-count');
+  if(b){var u=S.notifs.filter(function(n){return!n.read;}).length;b.textContent=u;b.style.display=u?'':'none';}
+}
+function buildNotifPanel(){
+  var html='<div class="notif-panel"><div class="notif-head"><span>Meldingen</span><button onclick="MSF.markRead()">Alles gelezen</button></div>';
+  if(!S.notifs.length)html+='<div class="notif-empty">Geen meldingen &#127881;</div>';
+  S.notifs.slice(0,12).forEach(function(n){
+    html+='<div class="notif-item'+(n.read?'':' unread')+'"><div class="notif-msg">'+esc(n.text)+'</div><div class="notif-time">'+n.time+'</div></div>';
+  });
+  html+='</div>';
+  return html;
+}
+function topbar(){return '<div class="top"><div class="brand"><img class="logo" src="https://www.meesterschildersfriesland.nl/wp-content/uploads/2024/12/MSF-logo-vierkant.jpg" onerror="this.style.display=\'none\'"><div><h1>MSF Projecten</h1><small><span class="live-dot"></span>Live gedeeld via Supabase • v2.3</small></div></div><div class="searchbox"><span>⌕</span><input id="topSearch" value="'+esc(S.search)+'" placeholder="Zoek project, locatie, teamlid..." autocomplete="off"></div><div class="top-icons"><div class="notif-btn-wrap" style="position:relative"><div class="round" onclick="MSF.toggleNotifs()" style="cursor:pointer">🔔<b id="notif-count" class="count" style="display:none">0</b></div>'+(S.showNotifs?buildNotifPanel():'')+'</div><div class="round">💬</div><div class="round avatar">'+esc(S.user.av)+'</div><button class="logout" onclick="MSF.logout()">Uitloggen</button></div></div><div class="navrow">'+nav('home','🏠','Overzicht')+nav('projects','▣','Projecten')+nav('tasks','▣','Taken')+nav('planning','▣','Planning')+nav('team','👥','Team')+nav('chat','💬','Messages')+nav('map','📍','Kaart')+nav('reports','▥','Rapporten')+nav('admin','⚙','Instellingen')+'</div>'}
+function nav(p,i,t){return '<button class="navbtn '+(S.page===p?'on':'')+'" onclick="MSF.go(\''+p+'\')"><span>'+i+'</span>'+t+'</button>'}
+function bindTopSearch(){var inp=byId('topSearch');if(!inp)return;inp.oninput=function(){S.search=this.value;renderPageOnly()};}
+function render(){if(!S.user){renderLogin();return}app.innerHTML=topbar()+pageHtml()+modalHtml();bindTopSearch();if(S.page==='map')setTimeout(drawMap,80);if(S.page==='project')setTimeout(drawDetailMap,80);if(S.page==='project')setTimeout(drawDetailMap,80)}
+function renderPageOnly(){var old=document.querySelector('.page');if(old)old.outerHTML=pageHtml();else render();if(S.page==='map')setTimeout(drawMap,80);if(S.page==='project')setTimeout(drawDetailMap,80)}
+function renderLogin(){var saved=load('msf_login_memory',{});var remembered=S.loginSel&&saved[S.loginSel]?saved[S.loginSel]:'';app.innerHTML='<div class="login"><div class="login-card"><div class="login-head"><img src="https://www.meesterschildersfriesland.nl/wp-content/uploads/2024/12/MSF-logo-vierkant.jpg"><h1>MSF Projecten</h1><p>Meesterschilders Friesland BV</p></div><p style="font-weight:800;color:#c8d6ea">Selecteer je naam</p><div class="users">'+TEAM.map(function(m){return '<button class="user-btn '+(S.loginSel===m.id?'on':'')+'" onclick="MSF.selLogin('+m.id+')">'+initials(m)+'<span><b>'+esc(m.name.split(' ')[0])+'</b><br><small>'+esc(m.role)+'</small></span></button>'}).join('')+'</div>'+(S.loginSel?'<input id="loginPw" type="password" placeholder="Wachtwoord" value="'+esc(remembered)+'" onkeydown="if(event.key===\'Enter\')MSF.doLogin()"><label class="remember-row"><input type="checkbox" id="rememberPw" '+(remembered?'checked':'')+'> Naam en wachtwoord onthouden</label><button class="btn orange" style="width:100%;margin-top:12px" onclick="MSF.doLogin()">Inloggen</button>':'<p style="text-align:center;color:#9fb2ce">Selecteer eerst je naam</p>')+(S.loginErr?'<p style="color:#ffb4b4;font-weight:800">'+esc(S.loginErr)+'</p>':'')+'</div></div>'}
+function pageHtml(){if(S.page==='project')return projectDetailPage();if(S.page==='tasks')return tasksPage();if(S.page==='admin')return adminPage();if(S.page==='map')return mapPage();if(S.page==='team')return S.selectedMember?memberDetailPage():teamPage();if(S.page==='chat')return simplePage('Messages','Teamchat en projectberichten worden hier getoond.');if(S.page==='planning')return simplePage('Planning','Planningsoverzicht komt hier.');if(S.page==='reports')return simplePage('Rapporten','Rapportages, export en PDF-overzichten.');return homePage()}
+function homePage(){var ps=filteredProjects();return '<main class="page"><section class="home-layout"><div class="card home-main"><div class="home-head"><div><h3>Mijn Projecten</h3><div class="tabs"><button class="tab on">Alle ('+ps.length+')</button><button class="tab">Actief ('+stat('Actief')+')</button><button class="tab">Gepland ('+stat('Gepland')+')</button><button class="tab">Afgerond ('+stat('Afgerond')+')</button></div></div><div style="display:flex;gap:12px"><button class="btn light">▽ Filter</button><button class="btn orange" onclick="MSF.openModal(\'project\')">＋ Nieuw Project</button></div></div><div class="project-list-big">'+ps.slice(0,8).map(projectRow).join('')+'</div><button class="more">Meer laden⌄</button></div><aside class="side"><div class="card side-card"><h3>Taken Overzicht</h3>'+line('Totaal taken',TASKS.length)+line('Voltooid',countTasks('Voltooid'),'green')+line('In uitvoering',countTasks('In uitvoering'),'blue')+line('Te doen',countTasks('Te doen'))+'<b style="display:block;margin-top:18px">Voortgang totaal <span style="float:right;color:#0b4aaa">'+overallProgress()+'%</span></b><div class="progress"><i style="width:'+overallProgress()+'%"></i></div></div><div class="card side-card"><h3>Teamleden <button style="float:right;background:none;color:#0b5bd3;font-weight:700" onclick="MSF.go(\'team\')">Bekijk alles ›</button></h3>'+TEAM.slice(0,4).map(function(m,i){return '<div class="person">'+initials(m,i===1?'orange':i===2?'green':i===3?'purple':'')+'<div style="flex:1"><b>'+esc(m.name)+'</b><br><span>'+esc(m.role.split('/')[0])+'</span></div><span><i class="online '+(i===2?'offline':'')+'"></i>'+(i===2?'Afwezig':'Online')+'</span></div>'}).join('')+'</div></aside></section><section class="bottom-grid"><div class="card small-panel"><h3>Activiteiten <button style="float:right;background:none;color:#0b5bd3">Bekijk alles ›</button></h3><div class="activity">Jan de Vries heeft taak “Inspectie” voltooid</div><div class="activity">Hilco heeft projectgegevens bijgewerkt</div></div><div class="card small-panel"><h3>Berichten <button class="btn light" style="float:right">Nieuw Bericht</button></h3><div class="activity">Geen nieuwe berichten.</div></div></section></main>'}
+function line(a,b,cls){return '<div class="line"><span '+(cls==='blue'?'style="color:#0b5bd3"':cls==='green'?'style="color:#15914c"':'')+'>'+a+'</span><strong>'+b+'</strong></div>'}
+function projectRow(p){
+  var coords=coordsForProject(p);
+  var mapUrl=staticMapUrl(p,340,232,15);
+  var addr=esc(fullAddress(p)||'Adres nog invullen');
+  var city=esc(p.city||p.address||'');
+  var prog=Number(p.progress||0);
+  var statusCls=p.status.toLowerCase();
+  var teamCount=(p.assignees||[]).length;
+  return '<article class="project-row" tabindex="0" onclick="MSF.openProject('+p.id+')" onkeydown="if(event.key===\'Enter\')MSF.openProject('+p.id+')">'
+    +'<div class="project-img" style="background-image:url('+JSON.stringify(mapUrl)+');background-size:cover;background-position:center;position:relative">'
+    +'<span style="position:absolute;bottom:5px;left:5px;background:rgba(0,0,0,.5);color:#fff;font-size:10px;padding:2px 6px;border-radius:5px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+city+'</span>'
+    +'</div>'
+    +'<div><div class="project-title">'+esc(p.name)+'</div>'
+    +'<div class="project-address-line">&#128205; '+addr+'</div>'
+    +'<div class="project-meta"><span>&#128197; Start: '+(fmt(p.start)||'n.t.b.')+'</span><span>&#9800; Team: '+teamCount+'</span><span>&#8594; Klik voor projectpagina</span></div>'
+    +'<div style="margin-top:16px;color:#31476a">Voortgang</div>'
+    +'<div style="display:flex;align-items:center;gap:12px"><div class="progress '+(p.status==='Afgerond'?'green':p.status==='Gepland'?'orange':'')+'" style="flex:1"><i style="width:'+prog+'%"></i></div><b>'+prog+'%</b></div>'
+    +'</div>'
+    +'<span class="badge '+statusCls+'">'+esc(p.status)+'</span>'
+    +'<span class="chev">&#8250;</span>'
+    +'</article>';
+}
+
+function countTasks(st){return TASKS.filter(function(t){return t.status===st}).length}function overallProgress(){return TASKS.length?Math.round(countTasks('Voltooid')/TASKS.length*100):0}
+
+function projectDetailPage(){
+  var p=project(S.projectId)||PROJECTS[0];
+  var ts=TASKS.filter(function(t){return t.project_id===p.id});
+  var taskHtml = ts.length ? ts.slice(0,6).map(function(t){return '<div class="role-line"><span>'+esc(t.title)+'</span><b class="chip">'+esc(t.status)+'</b></div>';}).join('') : '<p style="color:var(--muted)">Nog geen taken.</p>';
+  return '<main class="page compact-page">'
+    +'<div class="hero"><div><h2>🏗️ '+esc(p.name)+'</h2><p>'+esc(fullAddress(p)||'Adres nog invullen')+'</p></div>'
+    +'<div class="actionbar"><button class="btn light" onclick="MSF.go(&quot;home&quot;)">← Terug naar overzicht</button><button class="btn orange" onclick="MSF.editProject('+p.id+')">✎ Project bewerken</button></div></div>'
+    +'<section class="project-detail-grid"><div class="card detail-hero-card">'
+    +'<img src="'+esc(projectImage(p))+'" onerror="this.onerror=null;this.src=&quot;'+esc(p.img||IMGS[0])+'&quot;">'
+    +'<div class="detail-title-row"><div><h3>'+esc(p.name)+'</h3><p style="color:var(--muted);margin:6px 0 0">📍 '+esc(fullAddress(p)||'Geen adres ingevuld')+'</p></div><span class="badge '+p.status.toLowerCase()+'">'+esc(p.status)+'</span></div>'
+    +'<div style="display:flex;align-items:center;gap:12px;margin-top:16px"><div class="progress '+(p.status==='Afgerond'?'green':p.status==='Gepland'?'orange':'')+'" style="flex:1"><i style="width:'+Number(p.progress||0)+'%"></i></div><b>'+Number(p.progress||0)+'%</b></div>'
+    +'<div class="detail-meta-grid"><div class="detail-meta"><small>Adres</small>'+esc(p.address||'—')+'</div><div class="detail-meta"><small>Postcode / woonplaats</small>'+esc((p.postcode||'—')+' '+(normalizeCity(p.city)||''))+'</div><div class="detail-meta"><small>Start</small>'+esc(fmt(p.start)||'n.t.b.')+'</div><div class="detail-meta"><small>Einde</small>'+esc(fmt(p.end)||'n.t.b.')+'</div></div></div>'
+    +'<aside class="detail-side"><div class="card admin-box"><h3>Projectkaart</h3><div class="detail-map" id="detailMap"></div><div id="detailMapStatus" class="map-status warn">Kaart wordt geladen op basis van het ingevulde adres...</div></div>'
+    +'<div class="card admin-box"><h3>Taken in dit project</h3>'+taskHtml+'<button class="more" style="width:100%" onclick="S.taskProjectId='+p.id+';MSF.go(&quot;tasks&quot;)">Taken beheren</button></div>'
+    +'<div class="card admin-box"><h3>Notities</h3><p style="color:#344766;line-height:1.7">'+esc(p.notes||'Geen notities ingevuld.')+'</p></div></aside></section></main>';
+}
+function drawDetailMap(){var el=byId('detailMap');if(!el||typeof L==='undefined')return;var p=project(S.projectId);if(S.detailMap){S.detailMap.remove();S.detailMap=null}var start=coordsForProject(p);S.detailMap=L.map('detailMap').setView(start,15);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(S.detailMap);var marker=L.marker(start).addTo(S.detailMap).bindPopup('<b>'+esc(p.name)+'</b><br>'+esc(fullAddress(p))).openPopup();geocodeProject(p,function(c){var st=byId('detailMapStatus');if(c){marker.setLatLng([c.lat,c.lon]);S.detailMap.setView([c.lat,c.lon],17);saveProjects(null);if(st){st.className='map-status';st.textContent='Locatie gevonden op basis van het ingevulde adres.'}}else if(st){st.className='map-status warn';st.textContent='Exacte locatie niet gevonden. Kaart toont postcode/woonplaats.'}})}
+function tasksPage(){var ps=filteredProjects();var current=project(S.taskProjectId||ps[0]?.id||PROJECTS[0].id);S.taskProjectId=current.id;var tasks=TASKS.filter(function(t){return t.project_id===current.id});return '<main class="page"><div class="hero"><div><h2>✅ Takenoverzicht</h2><p>Alle taken over alle projecten · klik op een project om taken te beheren</p></div></div><div class="toolbar"><label>Filter:</label><select><option>Alle medewerkers</option>'+TEAM.map(function(m){return '<option>'+esc(m.name)+'</option>'}).join('')+'</select><select><option>Actieve projecten</option><option>Alle projecten</option><option>Afgeronde projecten</option></select><input placeholder="Zoek taak..."><span style="flex:1"></span><button class="btn light">⇩ Exporteren</button><button class="btn orange" onclick="MSF.openModal(\'task\')">＋ Nieuwe taak</button></div><section class="tasks-layout"><div class="card tasks-projects"><h3>Projecten <span class="chip blue">'+ps.length+'</span></h3>'+ps.map(function(p){return '<div class="mini-project '+(p.id===current.id?'on':'')+'" onclick="MSF.selectTaskProject('+p.id+')"><img src="'+esc(p.img||IMGS[0])+'"><div><h4>'+esc(p.name)+'</h4><div class="project-meta">📍 '+esc(p.address+', '+p.city)+'</div><span class="badge '+p.status.toLowerCase()+'">'+esc(p.status)+'</span><div>Voortgang</div><div style="display:flex;gap:10px;align-items:center"><div class="progress" style="flex:1"><i style="width:'+Number(p.progress||0)+'%"></i></div><b>'+Number(p.progress||0)+'%</b></div></div></div>'}).join('')+'</div><div class="card task-table-wrap"><div class="task-head"><h3>Taken voor: <span style="color:#0b5bd3">'+esc(current.name)+'</span></h3><div class="chips"><span class="chip">Totaal '+tasks.length+'</span><span class="chip green">Voltooid '+tasks.filter(function(t){return t.status==='Voltooid'}).length+'</span><span class="chip blue">In uitvoering '+tasks.filter(function(t){return t.status==='In uitvoering'}).length+'</span><span class="chip">Te doen '+tasks.filter(function(t){return t.status==='Te doen'}).length+'</span></div></div><div class="nowrap-scroll"><div class="table-shell"><table class="table"><thead><tr><th><input class="check" type="checkbox"></th><th>Taak</th><th>Project</th><th>Toegewezen aan</th><th>Deadline</th><th>Status</th><th>Prioriteit</th><th></th></tr></thead><tbody>'+tasks.map(taskRow).join('')+'</tbody></table></div><div class="table-scroll-note">Tabel is horizontaal scrollbaar bij kleine schermen.</div><div class="pager"><button>‹</button><button class="on">1</button><button>›</button></div></div></section></main>'}
+function taskRow(t){var m=person(t.assignee);return '<tr><td><input class="check" type="checkbox" '+(t.status==='Voltooid'?'checked':'')+'></td><td>'+esc(t.title)+'</td><td>'+esc(project(t.project_id).name)+'</td><td>'+initials(m)+' '+esc(m.name)+'</td><td>'+fmt(t.deadline)+'</td><td><span class="status-pill '+(t.status==='Voltooid'?'done':t.status==='In uitvoering'?'busy':'')+'">'+esc(t.status)+'</span></td><td><i class="prio '+(t.priority==='Hoog'?'high':'')+'"></i>'+esc(t.priority)+'</td><td>⋮</td></tr>'}
+function adminPage(){return '<main class="page admin-compact compact-page"><div class="hero"><div><h2>⚙ Beheer</h2><p>Beheer alle instellingen, teamleden, rollen en sjablonen.</p></div></div><div class="admin-tabs"><button class="on">⚙ Overzicht</button><button>👥 Teamleden</button><button>♧ Rollen & Rechten</button><button>⚙ Instellingen</button><button>▣ Taak Sjablonen</button><button>▣ Project Sjablonen</button><button>↺ Activiteiten Log</button><button>♧ Integraties</button><button>▣ Back-ups & Data</button></div><section class="admin-grid"><div class="stack"><div class="card admin-box"><h3>Snel overzicht</h3><div class="quick-stats"><div class="quick">👥<strong>'+TEAM.length+'</strong><small>Teamleden</small></div><div class="quick">✅<strong>'+TASKS.length+'</strong><small>Taken</small></div><div class="quick">📁<strong>'+PROJECTS.length+'</strong><small>Projecten</small></div><div class="quick">▰<strong>'+overallProgress()+'%</strong><small>Voortgang</small></div></div></div><div class="card admin-box"><h3>Systeem status</h3>'+line('Database','Verbonden','green')+line('Server status','Online','green')+line('Laatste backup','Vandaag om 02:15')+line('Opslag gebruikt','1.24 GB / 10 GB')+'<div class="progress green"><i style="width:12%"></i></div>'+line('Actieve sessies','5')+'</div><div class="card admin-box"><h3>Recente activiteiten</h3><div class="activity">Jan de Vries heeft taak “Inspectie” voltooid</div><div class="activity">Hilco heeft project “Woning renovatie” bijgewerkt</div><div class="activity">Marten heeft nieuw teamlid toegevoegd</div><button class="more" style="width:100%">Bekijk alle activiteiten</button></div></div><div class="stack"><div class="card admin-box"><div style="display:flex;gap:10px;align-items:center;margin-bottom:14px"><h3 style="flex:1">Teamleden</h3><input style="height:38px;border:1px solid #d9e2f1;border-radius:8px;padding:0 12px" placeholder="Zoek teamlid..."><select style="height:38px;border:1px solid #d9e2f1;border-radius:8px"><option>Alle rollen</option></select><button class="btn light">⇩ Exporteren</button><button class="btn orange">＋ Teamlid toevoegen</button></div><div class="admin-table-scroll"><table class="admin-table"><thead><tr><th>Naam</th><th>Functie</th><th>E-mail</th><th>Rol</th><th>Status</th><th>Laatst actief</th><th>Acties</th></tr></thead><tbody>'+TEAM.map(function(m,i){return '<tr><td>'+initials(m)+' <b>'+esc(m.name)+'</b></td><td>'+esc(m.role)+'</td><td>'+esc(m.email)+'</td><td><span class="pill '+(m.admin?'purple':i<3?'':'green')+'">'+(m.admin?'Beheerder':i<3?'Projectleider':'Medewerker')+'</span></td><td><i class="online '+(i===4||i===5?'offline':'')+'"></i>'+(i===4||i===5?'Offline':'Online')+'</td><td>'+(i>3?'Gisteren 16:32':'Vandaag 10:24')+'</td><td><button class="iconbtn">✎</button> <button class="iconbtn danger">🗑</button></td></tr>'}).join('')+'</tbody></table></div></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px"><div class="card admin-box"><h3>Rollen & Rechten</h3>'+role('Beheerders',2)+role('Projectleiders',3)+role('Medewerkers',6)+role('Klanten (beperkt)',0)+'<button class="more" style="width:100%">Rollen beheren</button></div><div class="card admin-box"><h3>Taak Sjablonen</h3>'+role('Buitenschilderwerk standaard','12 taken')+role('Binnen schilderwerk standaard','15 taken')+role('Renovatie project standaard','18 taken')+role('Onderhoud standaard','9 taken')+'<button class="more" style="width:100%">Sjablonen beheren</button></div><div class="card admin-box"><h3>Project Sjablonen</h3>'+role('Woning renovatie','5 fasen')+role('Nieuwbouw project','6 fasen')+role('Onderhoudsproject','4 fasen')+role('App. complex beheer','7 fasen')+'<button class="more" style="width:100%">Sjablonen beheren</button></div></div></div><div class="stack"><div class="card admin-box"><h3>Snelle acties</h3><div class="action-list"><button>👥 Teamlid toevoegen <span>›</span></button><button>👥 Rol of rechten beheren <span>›</span></button><button>▣ Taak sjabloon toevoegen <span>›</span></button><button>▣ Project sjabloon toevoegen <span>›</span></button><button>⚙ Systeem instellingen <span>›</span></button><button>▣ Backup maken <span>›</span></button><button>↺ Activiteiten log bekijken <span>›</span></button><button>♧ Integraties beheren <span>›</span></button></div><button class="more" style="width:100%">⚙ Beheer pagina aanpassen</button></div><div class="card admin-box"><h3>Integraties</h3>'+line('Google Drive','Verbonden','green')+line('Outlook Calendar','Verbonden','green')+line('WhatsApp Business','Niet verbonden')+line('Exact Online','Niet verbonden')+'<button class="more" style="width:100%">Integraties beheren</button></div></div></section><div class="footer">MSF Projecten v2.3 · Meesterschilders Friesland BV · Beheeromgeving</div></main>'}
+function role(a,b){return '<div class="role-line"><span>'+esc(a)+'</span><b class="chip">'+esc(b)+'</b></div>'}
+function teamPage(){
+  return '<main class="page">'
+    +'<div class="hero"><div><h2>&#128101; Team</h2><p>Klik op een teamlid voor details en projecten.</p></div></div>'
+    +'<div class="card admin-box"><div class="admin-table-scroll"><table class="admin-table">'
+    +'<thead><tr><th>Naam</th><th>Functie</th><th>E-mail</th><th>Projecten</th></tr></thead><tbody>'
+    +TEAM.map(function(m){
+      var ac=PROJECTS.filter(function(p){return(p.assignees||[]).indexOf(m.id)>-1&&p.status==='Actief';}).length;
+      return '<tr class="team-row" onclick="MSF.openMember('+m.id+')">'
+        +'<td>'+initials(m)+' <b>'+esc(m.name)+'</b>'+(m.id===S.user.id?' <span class="pill green" style="font-size:10px">jij</span>':'')+'</td>'
+        +'<td>'+esc(m.role)+'</td>'
+        +'<td>'+esc(m.email||'')+'</td>'
+        +'<td><span class="pill '+(ac?'green':'')+'">'+(ac?ac+' actief':'Geen')+'</span> &#8594;</td></tr>';
+    }).join('')
+    +'</tbody></table></div></div></main>';
+}
+
+function memberDetailPage(){
+  var m=TEAM.find(function(x){return x.id===S.selectedMember;});
+  if(!m)return teamPage();
+  var actief=PROJECTS.filter(function(p){return(p.assignees||[]).indexOf(m.id)>-1&&p.status==='Actief';});
+  var gepland=PROJECTS.filter(function(p){return(p.assignees||[]).indexOf(m.id)>-1&&p.status==='Gepland';});
+  var afgerond=PROJECTS.filter(function(p){return(p.assignees||[]).indexOf(m.id)>-1&&p.status==='Afgerond';});
+  var myTasks=TASKS.filter(function(t){return t.assignee===m.id;});
+  var openT=myTasks.filter(function(t){return t.status!=='Voltooid';}).length;
+
+  function projCard(p,color){
+    return '<div class="card" style="padding:14px;cursor:pointer;margin-bottom:8px;border-left:4px solid '+color+'" onclick="MSF.openProject('+p.id+')">'
+      +'<div style="font-weight:700;font-size:14px;color:#1B2B4B">'+esc(p.name)+'</div>'
+      +'<div style="font-size:12px;color:#6B7A99;margin-top:2px">&#128205; '+esc(p.address||'')+( p.city?', '+esc(p.city):'')+'</div>'
+      +'<div style="margin-top:8px;display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:12px;color:#6B7A99">Voortgang</span><span style="font-size:12px;font-weight:700;color:'+color+'">'+p.progress+'%</span></div>'
+      +'<div style="background:#D0D8E8;border-radius:5px;height:5px;overflow:hidden"><div style="width:'+p.progress+'%;height:100%;background:'+color+'"></div></div>'
+      +'</div>';
+  }
+
+  var html='<main class="page">'
+    +'<button onclick="MSF.closeMember()" style="margin-bottom:18px;padding:7px 14px;border-radius:8px;border:1.5px solid #D0D8E8;background:#fff;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600">&#8592; Terug naar team</button>'
+    +'<div class="card" style="padding:22px;margin-bottom:16px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">'
+    +initials(m)
+    +'<div style="flex:1;min-width:180px">'
+    +'<h2 style="margin:0;font-size:20px;font-weight:800;color:#1B2B4B">'+esc(m.name)+'</h2>'
+    +'<div style="font-size:14px;color:#6B7A99;margin-top:3px">'+esc(m.role)+'</div>'
+    +'<div style="font-size:13px;color:#6B7A99;margin-top:2px">&#9993; '+esc(m.email||'')+'</div>'
+    +(m.admin?'<div style="font-size:12px;color:#7b3fa0;font-weight:700;margin-top:4px">&#128081; Beheerder</div>':'')
+    +(m.id===S.user.id?'<div style="font-size:12px;color:#27ae60;font-weight:700;margin-top:3px">&#8592; Dit ben jij</div>':'')
+    +'</div>'
+    +'<div style="display:flex;gap:10px;flex-wrap:wrap">'
+    +'<div style="text-align:center;padding:12px 16px;background:#e3f0fd;border-radius:10px"><div style="font-size:22px;font-weight:800;color:#1B3A6B">'+actief.length+'</div><div style="font-size:11px;color:#6B7A99;margin-top:2px">Actief</div></div>'
+    +'<div style="text-align:center;padding:12px 16px;background:#fff8e1;border-radius:10px"><div style="font-size:22px;font-weight:800;color:#856404">'+gepland.length+'</div><div style="font-size:11px;color:#6B7A99;margin-top:2px">Gepland</div></div>'
+    +'<div style="text-align:center;padding:12px 16px;background:#e8f5e9;border-radius:10px"><div style="font-size:22px;font-weight:800;color:#1e7e34">'+afgerond.length+'</div><div style="font-size:11px;color:#6B7A99;margin-top:2px">Afgerond</div></div>'
+    +'<div style="text-align:center;padding:12px 16px;background:#fdf2e9;border-radius:10px"><div style="font-size:22px;font-weight:800;color:#E8760A">'+openT+'</div><div style="font-size:11px;color:#6B7A99;margin-top:2px">Open taken</div></div>'
+    +'</div></div>';
+
+  if(actief.length){html+='<h3 style="font-size:15px;font-weight:700;color:#1B2B4B;margin-bottom:10px">&#128309; Actieve projecten</h3>';actief.forEach(function(p){html+=projCard(p,'#1B3A6B');});}
+  if(gepland.length){html+='<h3 style="font-size:15px;font-weight:700;color:#1B2B4B;margin:16px 0 10px">&#128993; Geplande projecten</h3>';gepland.forEach(function(p){html+=projCard(p,'#f0a500');});}
+  if(afgerond.length){html+='<h3 style="font-size:15px;font-weight:700;color:#1B2B4B;margin:16px 0 10px">&#128994; Afgeronde projecten</h3>';afgerond.forEach(function(p){html+=projCard(p,'#27ae60');});}
+  if(!actief.length&&!gepland.length&&!afgerond.length){
+    html+='<div class="card" style="padding:28px;text-align:center;color:#6B7A99"><div style="font-size:36px;margin-bottom:10px">&#128203;</div><div style="font-weight:700">Geen projecten gekoppeld</div></div>';
+  }
+  html+='</main>';
+  return html;
+}
+
+function simplePage(t,d){return '<main class="page"><div class="hero"><div><h2>'+esc(t)+'</h2><p>'+esc(d)+'</p></div></div><div class="card admin-box"><p>Deze pagina is voorbereid en past automatisch binnen het scherm.</p></div></main>'}
+function mapPage(){return '<main class="page"><div class="hero"><div><h2>📍 Projecten op kaart</h2><p>Adres, postcode en woonplaats worden opgeslagen en gebruikt voor de kaart.</p></div><div class="actionbar"><button class="btn orange" onclick="MSF.openModal(\'project\')">＋ Nieuw project</button><button class="btn light" onclick="MSF.resetLocal()">Reset testdata</button></div></div><div class="card mapbox" id="map"></div><div class="table-scroll-note">Klik op een marker om project en adres te zien. Projectgegevens kun je aanpassen via de projectkaart.</div></main>'}
+function drawMap(){var el=byId('map');if(!el||typeof L==='undefined')return;if(S.map){S.map.remove();S.map=null}S.map=L.map('map').setView([53.16,5.82],9);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(S.map);var markers=[];PROJECTS.forEach(function(p){var c=coordsForProject(p);var m=L.marker(c).addTo(S.map).bindPopup('<b>'+esc(p.name)+'</b><br>'+esc(fullAddress(p))+'<br><button style="margin-top:8px;padding:7px 10px;border-radius:8px;border:0;background:#123d72;color:#fff;font-weight:800" onclick="MSF.openProject('+p.id+')">Openen</button> <button style="margin-top:8px;padding:7px 10px;border-radius:8px;border:0;background:#f47b16;color:#fff;font-weight:800" onclick="MSF.editProject('+p.id+')">Bewerken</button>');markers.push(m);geocodeProject(p,function(c2){if(c2){m.setLatLng([c2.lat,c2.lon]);saveProjects(null)}})});if(markers.length){try{S.map.fitBounds(L.featureGroup(markers).getBounds().pad(.18))}catch(e){}}}
+function modalHtml(){if(!S.modal)return '';if(S.modal==='project'){return projectModal()}if(S.modal==='task'){return taskModal()}return ''}
+function projectModal(){var p=S.editing||{name:'',address:'',postcode:'',city:'',status:'Gepland',progress:0,start:'',end:'',notes:'',assignees:[]};var preview=projectImage(p);return '<div class="modal-bg"><div class="modal"><div class="modal-title"><h3>'+(p.id?'Project bewerken':'Nieuw project')+'</h3><button class="round" style="width:38px;height:38px" onclick="MSF.closeModal()">×</button></div><div class="modal-body"><div class="field"><label>Naam</label><input id="pName" value="'+esc(p.name)+'"></div><div class="field"><label>Adres (straat + huisnummer)</label><input id="pAddress" value="'+esc(p.address)+'" oninput="MSF.previewAddress()"></div><div class="form-grid"><div class="field"><label>Postcode</label><input id="pPostcode" value="'+esc(p.postcode)+'" oninput="MSF.autofillCity();MSF.previewAddress()"><div class="addr-help">Bijv. 9212 PA. Woonplaats wordt waar mogelijk automatisch ingevuld.</div></div><div class="field"><label>Woonplaats</label><input id="pCity" value="'+esc(normalizeCity(p.city))+'" oninput="MSF.previewAddress()"></div></div><div class="map-preview"><img id="addrPreview" src="'+esc(preview)+'" onerror="this.style.display=\'none\'"></div><div class="readonly-row"><div class="field"><label>Kaartadres</label><input id="pFullAddress" readonly value="'+esc(fullAddress(p))+'"></div><div class="field"><label>Locatiebron</label><input readonly value="OpenStreetMap preview"></div></div><div class="form-grid"><div class="field"><label>Start</label><input type="date" id="pStart" value="'+esc(p.start)+'"></div><div class="field"><label>Einde</label><input type="date" id="pEnd" value="'+esc(p.end)+'"></div></div><div class="form-grid"><div class="field"><label>Status</label><select id="pStatus"><option '+(p.status==='Actief'?'selected':'')+'>Actief</option><option '+(p.status==='Gepland'?'selected':'')+'>Gepland</option><option '+(p.status==='Afgerond'?'selected':'')+'>Afgerond</option></select></div><div class="field"><label>Voortgang %</label><input type="number" min="0" max="100" id="pProgress" value="'+Number(p.progress||0)+'"></div></div><div class="field"><label>Notities</label><textarea id="pNotes">'+esc(p.notes)+'</textarea></div><div class="modal-actions"><button class="btn orange" style="flex:1" onclick="MSF.saveProject()">Opslaan</button><button class="btn light" onclick="MSF.closeModal()">Annuleren</button></div></div></div></div>'}
+function taskModal(){return '<div class="modal-bg"><div class="modal"><div class="modal-title"><h3>Nieuwe taak</h3><button class="round" style="width:38px;height:38px" onclick="MSF.closeModal()">×</button></div><div class="modal-body"><div class="field"><label>Omschrijving</label><input id="tTitle"></div><div class="form-grid"><div class="field"><label>Project</label><select id="tProject">'+PROJECTS.map(function(p){return '<option value="'+p.id+'">'+esc(p.name)+'</option>'}).join('')+'</select></div><div class="field"><label>Toegewezen aan</label><select id="tAss">'+TEAM.map(function(m){return '<option value="'+m.id+'">'+esc(m.name)+'</option>'}).join('')+'</select></div></div><div class="form-grid"><div class="field"><label>Deadline</label><input type="date" id="tDeadline"></div><div class="field"><label>Prioriteit</label><select id="tPrio"><option>Normaal</option><option>Hoog</option></select></div></div><div class="modal-actions"><button class="btn orange" style="flex:1" onclick="MSF.saveTask()">Aanmaken</button><button class="btn light" onclick="MSF.closeModal()">Annuleren</button></div></div></div></div>'}
+window.MSF={selLogin:function(id){S.loginSel=id;S.loginErr='';renderLogin();setTimeout(function(){var i=byId('loginPw');if(i)i.focus()},20)},doLogin:function(){var u=person(S.loginSel);var pw=(byId('loginPw')||{}).value||'';if(pw===u.pw){var mem=load('msf_login_memory',{});if(byId('rememberPw')&&byId('rememberPw').checked){mem[u.id]=pw}else{delete mem[u.id]}save('msf_login_memory',mem);S.user=u;S.page='home';save('msf_last_user',u.id);syncDown(false).then(function(){render();startPolling();});document.getElementById('splash').style.display='none';render()}else{S.loginErr='Onjuist wachtwoord.';renderLogin()}},openMember:function(id){S.selectedMember=id;S.page='team';render();},closeMember:function(){S.selectedMember=null;S.page='team';render();},toggleNotifs:function(){S.showNotifs=!S.showNotifs;render();},markRead:function(){S.notifs.forEach(function(n){n.read=true;});S.showNotifs=false;render();},logout:function(){stopPolling();S.user=null;save('msf_last_user',null);renderLogin();},go:function(p){S.page=p;render()},openProject:function(id){S.projectId=id;S.page='project';render()},openModal:function(m){S.editing=null;S.modal=m;render()},closeModal:function(){S.modal=null;S.editing=null;render()},editProject:function(id){S.editing=JSON.parse(JSON.stringify(project(id)));S.modal='project';render()},autofillCity:function(){var pc=byId('pPostcode');var city=byId('pCity');if(!pc||!city)return;var found=postcodeCity(pc.value);if(found&&!city.value.trim())city.value=found},previewAddress:function(){var p={address:(byId('pAddress')||{}).value||'',postcode:(byId('pPostcode')||{}).value||'',city:(byId('pCity')||{}).value||''};var full=byId('pFullAddress');if(full)full.value=fullAddress(p);var img=byId('addrPreview');if(img){img.style.display='block';img.src=projectImage(p)}},saveProject:function(){var p=S.editing||{id:Date.now(),img:IMGS[0],assignees:[S.user.id]};p.name=byId('pName').value.trim()||'Nieuw project';p.address=byId('pAddress').value.trim();p.postcode=byId('pPostcode').value.trim().toUpperCase();p.city=normalizeCity(byId('pCity').value.trim()||postcodeCity(p.postcode));p.start=byId('pStart').value;p.end=byId('pEnd').value;p.status=byId('pStatus').value;p.progress=Math.max(0,Math.min(100,parseInt(byId('pProgress').value||0,10)));p.notes=byId('pNotes').value;p.img=projectImage(p);var i=PROJECTS.findIndex(function(x){return x.id===p.id});if(i>=0)PROJECTS[i]=p;else PROJECTS.unshift(p);save('msf_projects_v23',PROJECTS);sbSaveProject(p).then(function(){syncDown(false);});geocodeProject(p,function(){save('msf_projects_v23',PROJECTS);sbSaveProject(p).catch(function(){});render();});S.modal=null;S.editing=null;toast('Project opgeslagen en kaart bijgewerkt');render()},selectTaskProject:function(id){S.taskProjectId=id;renderPageOnly()},saveTask:function(){var title=byId('tTitle').value.trim();if(!title){toast('Vul een taak in');return}TASKS.push({id:Date.now(),project_id:parseInt(byId('tProject').value,10),title:title,assignee:parseInt(byId('tAss').value,10),deadline:byId('tDeadline').value,status:'Te doen',priority:byId('tPrio').value});var _t=TASKS[TASKS.length-1];save('msf_tasks_v23',TASKS);sbPost('taken',{project_id:_t.project_id,titel:_t.title,toegewezen_aan:_t.assignee||null,deadline:_t.deadline||null,status:_t.status,prioriteit:_t.priority}).then(function(r){if(r&&r[0]&&r[0].id)_t.id=r[0].id;}).catch(function(){});if(_t.assignee&&_t.assignee!==S.user.id)addNotif('Nieuwe taak: "'+_t.title+'"',true,_t.assignee);S.modal=null;toast('Taak aangemaakt');render()},toggleTask:function(id,done){
+  var t=TASKS.find(function(x){return x.id===id;});
+  if(!t)return;
+  t.status=done?'Voltooid':'Te doen';
+  save('msf_tasks_v23',TASKS);
+  sbPatch('taken',id,{status:t.status,afgerond:done}).catch(function(){});
+  render();
+},
+resetLocal:function(){if(confirm('Lokale testdata resetten?')){localStorage.removeItem('msf_projects_v23');localStorage.removeItem('msf_tasks_v23');PROJECTS=PROJECTS_DEFAULT.slice();TASKS=TASKS_DEFAULT.slice();toast('Testdata gereset');render()}}};
+setTimeout(function(){
+  document.getElementById('splash').style.display='none';
+  var last=load('msf_last_user',null);
+  var u=last?person(last):null;
+  if(u){
+    S.user=u;
+    render(); // show immediately from localStorage
+    syncDown(false).then(function(){render();}).catch(function(){});
+    startPolling();
+  } else {
+    renderLogin();
+  }
+},450);
+})();
+</script>
+</body>
+</html>

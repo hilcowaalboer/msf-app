@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MSF Projecten v24</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#061f47;--navy2:#123d72;--blue:#0b5bd3;--orange:#f47b16;--green:#21a55b;--red:#ef4444;--bg:#f3f6fb;--card:#fff;--line:#d8e2f2;--text:#0b2146;--muted:#70809d;--shadow:0 8px 28px rgba(8,40,86,.08)}
+*{box-sizing:border-box}html,body{min-height:100%;margin:0;background:var(--bg);color:var(--text);font-family:'Open Sans',Arial,sans-serif}button,input,select,textarea{font:inherit}button{border:0;cursor:pointer}.hidden{display:none!important}
+.splash{position:fixed;inset:0;z-index:999;background:linear-gradient(150deg,#071f46,#173f73);display:grid;place-items:center;color:#fff}.splash>div{text-align:center}.splash img{width:100px;border-radius:22px;background:#fff;border:5px solid rgba(255,255,255,.22)}.splash h1{font-size:34px;margin:22px 0 8px}.splash p{letter-spacing:6px;color:#9fb3d1;font-weight:700}.spin{width:54px;height:54px;border-radius:50%;border:7px solid rgba(255,255,255,.22);border-top-color:var(--orange);margin:26px auto 0;animation:spin .85s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.top{min-height:84px;background:linear-gradient(135deg,#061f47,#123d72);display:flex;align-items:center;gap:20px;padding:12px 24px;color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 8px 26px rgba(0,0,0,.2)}.brand{display:flex;align-items:center;gap:14px;min-width:280px}.logo{width:60px;height:60px;border-radius:14px;background:#fff;object-fit:cover}.brand h1{margin:0;font-size:26px;font-weight:800;line-height:1}.brand small{display:block;margin-top:5px;color:#c0cee3;font-size:13px}.live-dot{width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:6px}.searchbox{flex:1;max-width:720px;position:relative}.searchbox span{position:absolute;left:20px;top:15px;font-size:22px;color:#d6e2f3}.searchbox input{width:100%;height:58px;border-radius:16px;border:2px solid rgba(90,145,220,.65);background:rgba(255,255,255,.08);color:#fff;padding:0 20px 0 62px;font-size:18px;outline:none}.top-icons{display:flex;align-items:center;gap:12px;margin-left:auto}.round{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08);color:#fff;font-size:22px;position:relative}.round .count{position:absolute;right:-2px;top:-6px;background:#ff6b1a;border-radius:99px;padding:2px 7px;font-size:12px;font-weight:800}.avatar{font-size:16px;font-weight:800;background:#7b47b8}.logout{height:42px;border:2px solid rgba(255,255,255,.28);border-radius:12px;background:transparent;color:#e4edf9;padding:0 14px;font-weight:800}
+.navrow{height:66px;background:linear-gradient(135deg,#082856,#123d72);display:flex;align-items:center;gap:18px;padding:0 24px;color:#fff;position:sticky;top:84px;z-index:40;box-shadow:0 6px 18px rgba(8,40,86,.12);overflow-x:auto}.navbtn{height:46px;padding:0 16px;border-radius:10px;background:transparent;color:#e4edf9;font-weight:800;font-size:15px;display:flex;align-items:center;gap:8px;white-space:nowrap}.navbtn:hover,.navbtn.on{background:linear-gradient(135deg,#ef6c0f,#ff9f3d);box-shadow:0 10px 22px rgba(244,123,22,.28);color:#fff}
+.page{max-width:1540px;margin:0 auto;padding:26px 22px 36px}.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:20px}.hero h2{margin:0 0 6px;font-size:30px;letter-spacing:-.5px}.hero p{margin:0;color:var(--muted);font-size:15px}.btn{height:46px;padding:0 18px;border-radius:12px;background:linear-gradient(135deg,#123d72,#0b5bd3);color:#fff;font-weight:800;box-shadow:0 8px 18px rgba(11,91,211,.16);white-space:nowrap}.btn.orange{background:linear-gradient(135deg,#ef6c0f,#ff9f3d)}.btn.light{background:#fff;color:var(--text);border:1px solid var(--line);box-shadow:none}.btn.danger{background:#fff5f5;color:var(--red);border:1px solid #ffcaca;box-shadow:none}.card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);min-width:0}.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px}.kpi{padding:22px}.kpi small{color:var(--muted);font-weight:800}.kpi strong{display:block;font-size:34px;margin:8px 0;color:var(--navy)}.home-grid{display:grid;grid-template-columns:1.45fr .9fr;gap:18px}.panel{padding:22px}.panel h3{margin:0 0 14px;font-size:22px}.project-row{display:grid;grid-template-columns:145px 1fr 120px 28px;gap:18px;align-items:center;border:1px solid #e1e7f1;border-radius:14px;padding:12px;margin-bottom:12px;min-height:130px;cursor:pointer;transition:.15s}.project-row:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(8,40,86,.1)}.project-img{width:145px;height:105px;border-radius:10px;object-fit:cover;background:#eef4fb;border:1px solid #d6e2f1}.project-title{font-size:18px;font-weight:800;margin-bottom:7px}.project-address{font-size:13px;color:#52657f;margin-bottom:9px}.project-meta{display:flex;gap:18px;flex-wrap:wrap;color:#33486c;font-size:13px}.progress{height:9px;background:#e0e5ee;border-radius:999px;overflow:hidden}.progress i{display:block;height:100%;background:#123d72;border-radius:999px}.progress.green i{background:var(--green)}.progress.orange i{background:#ef9a18}.badge{display:inline-flex;align-items:center;justify-content:center;border-radius:9px;padding:8px 13px;font-weight:800;font-size:13px}.badge.actief{background:#dff4e9;color:#14723c}.badge.gepland{background:#fff1cf;color:#946100}.badge.afgerond{background:#dff4e9;color:#14723c}.badge.open{background:#eef2f7;color:#52627f}.chev{font-size:30px;color:#556b8d}.line{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #edf1f7}.activity{padding:10px 0;border-bottom:1px solid #edf1f7;color:#33486c}.projects-layout{display:grid;grid-template-columns:minmax(520px,1fr) minmax(460px,.9fr);gap:18px}.project-list{max-height:calc(100vh - 255px);overflow:auto;padding:18px}.mapbox{height:calc(100vh - 255px);min-height:540px;border-radius:18px;overflow:hidden}.tasks-layout{display:grid;grid-template-columns:340px minmax(720px,1fr);gap:18px}.sidebar{padding:18px;max-height:calc(100vh - 250px);overflow:auto}.mini-project{display:grid;grid-template-columns:78px 1fr;gap:12px;padding:12px;border-radius:14px;margin-bottom:12px;border-left:5px solid transparent;cursor:pointer}.mini-project.on{background:#eef5ff;border-left-color:#0b5bd3}.mini-project img{width:78px;height:70px;border-radius:9px;object-fit:cover}.toolbar{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:14px;padding:14px 18px;margin-bottom:18px;overflow-x:auto}.toolbar label{font-weight:800}.toolbar select,.toolbar input{height:42px;border:1px solid #d9e2f1;border-radius:9px;padding:0 13px;color:#0b2146;background:#fff;min-width:180px;outline:none}.tablewrap{padding:22px;overflow:auto;max-height:calc(100vh - 250px)}.table{border-collapse:collapse;width:100%;min-width:900px}.table th{color:#50617f;font-size:13px;text-align:left;padding:12px;border-bottom:1px solid var(--line)}.table td{padding:14px 12px;border-bottom:1px solid #edf1f7;font-weight:700;white-space:nowrap}.status-pill{padding:7px 12px;border-radius:999px;font-weight:800;background:#eef2f7;color:#52627f}.status-pill.done{background:#dff4e9;color:#178242}.status-pill.busy{background:#e3efff;color:#0b5bd3}.prio{width:9px;height:9px;border-radius:50%;background:#0b5bd3;display:inline-block;margin-right:8px}.prio.high{background:#f97316}.chat-layout{display:grid;grid-template-columns:320px minmax(500px,1fr);gap:18px;height:calc(100vh - 230px);min-height:520px}.chat-users,.chat-main{overflow:hidden}.chat-users{padding:16px}.chat-person{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;cursor:pointer}.chat-person.on,.chat-person:hover{background:#eef5ff}.chat-main{display:flex;flex-direction:column}.chat-stream{flex:1;overflow:auto;padding:20px}.msg{display:flex;gap:10px;margin-bottom:14px}.msg.me{flex-direction:row-reverse}.bubble-msg{max-width:72%;padding:12px 15px;border-radius:16px;background:#fff;border:1px solid #dfe7f4;line-height:1.5}.msg.me .bubble-msg{background:linear-gradient(135deg,#123d72,#0b5bd3);color:#fff}.chat-input{display:flex;gap:10px;border-top:1px solid #e4ebf6;padding:14px}.chat-input textarea{flex:1;min-height:46px;max-height:120px;resize:vertical;border:1px solid #d9e2f1;border-radius:12px;padding:11px;outline:none}.admin-grid{display:grid;grid-template-columns:320px minmax(600px,1fr) 300px;gap:14px}.admin-box{padding:16px}.admin-box h3{font-size:18px;margin:0 0 12px}.quick-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.quick{border-radius:12px;padding:14px 8px;text-align:center;background:#f3f8ff}.quick strong{font-size:25px;display:block}.admin-table-scroll{overflow:auto}.admin-table{width:100%;min-width:760px;border-collapse:collapse}.admin-table th,.admin-table td{padding:11px 10px;border-bottom:1px solid #edf1f7;text-align:left;font-size:13px}.pill{padding:6px 11px;border-radius:7px;background:#eaf2ff;color:#0b5bd3;font-weight:800}.pill.green{background:#e5f7ed;color:#14964b}.pill.purple{background:#efe7ff;color:#7a42b8}.iconbtn{width:34px;height:34px;border-radius:8px;border:1px solid #bdd0ed;background:#fff;color:#0b5bd3}.iconbtn.danger{border-color:#ffcaca;color:#ef4444}.action-list button{width:100%;display:flex;justify-content:space-between;align-items:center;background:#fff;border-bottom:1px solid #edf1f7;text-align:left;padding:12px 7px;color:#20365f;font-weight:800}.modal-bg{position:fixed;inset:0;background:rgba(5,17,38,.72);z-index:100;display:grid;place-items:center;padding:20px}.modal{background:#fff;border-radius:18px;width:min(760px,96vw);max-height:92vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.32)}.modal-title{background:linear-gradient(135deg,#123d72,#0b5bd3);color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center}.modal-title h3{margin:0}.modal-body{padding:22px}.field{margin-bottom:13px}.field label{display:block;color:#123d72;font-weight:800;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;height:46px;border:1px solid #d9e2f1;border-radius:12px;padding:0 13px;outline:none}.field textarea{height:90px;padding:10px 13px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.modal-actions{display:flex;gap:10px;margin-top:10px;position:sticky;bottom:0;background:#fff;padding-top:12px}.street-preview{height:210px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#eef4fb;margin-bottom:13px}.street-preview img{width:100%;height:100%;object-fit:cover}.detail-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.detail-img{width:100%;height:300px;object-fit:cover;border-radius:16px;border:1px solid var(--line);background:#eef4fb}.detail-map{height:360px;border-radius:18px;overflow:hidden}.notif-panel{position:absolute;right:0;top:52px;width:320px;background:#fff;border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.18);border:1px solid #D0D8E8;z-index:500;overflow:hidden}.notif-head{padding:11px 15px;border-bottom:1px solid #EEF1F8;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:13px;color:#1B2B4B}.notif-head button{background:#F2F4F8;color:#6B7A99;font-size:11px;padding:3px 8px;border-radius:6px}.notif-item{padding:9px 15px;border-bottom:1px solid #EEF1F8}.notif-item.unread{background:rgba(27,58,107,.04)}.notif-msg{font-size:12px;color:#1B2B4B}.notif-item.unread .notif-msg{font-weight:700}.notif-time{font-size:10px;color:#6B7A99;margin-top:2px}.toast{position:fixed;left:50%;bottom:25px;transform:translateX(-50%);background:#123d72;color:#fff;padding:13px 20px;border-radius:12px;font-weight:800;display:none;z-index:200}.login{min-height:100vh;background:linear-gradient(150deg,#071f46,#143d72);display:grid;place-items:center;color:#fff}.login-card{width:min(470px,92vw);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:22px;padding:26px}.login-head{text-align:center;margin-bottom:18px}.login-head img{width:90px;background:#fff;border-radius:18px}.users{display:grid;grid-template-columns:1fr 1fr;gap:8px}.user-btn{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:12px;padding:10px;text-align:left}.user-btn.on{border-color:#ff8a24;background:rgba(244,123,22,.18)}.login-card input{width:100%;height:48px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff;padding:0 14px;margin-top:13px}.remember-row{display:flex;align-items:center;gap:8px;margin-top:10px;color:#dbe8f8;font-size:13px}.remember-row input{width:16px!important;height:16px!important;margin:0!important}.bubble{width:38px;height:38px;border-radius:50%;display:inline-grid;place-items:center;color:#fff;background:#123d72;font-weight:800;vertical-align:middle;margin-right:8px}.online{width:10px;height:10px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:7px}.footer{text-align:center;color:#7e8ca5;font-size:12px;margin-top:18px}
+@media(max-width:1180px){.top{height:auto;flex-wrap:wrap}.searchbox{order:3;max-width:none;flex-basis:100%}.navrow{top:112px}.kpi-grid,.home-grid,.projects-layout,.tasks-layout,.chat-layout,.admin-grid,.detail-grid{grid-template-columns:1fr}.mapbox,.project-list,.sidebar,.tablewrap{height:auto;max-height:none}.project-row{grid-template-columns:115px 1fr}.project-img{width:115px;height:90px}.project-row .badge,.project-row .chev{display:none}}
+@media(max-width:720px){.page{padding:18px 12px}.hero{flex-direction:column}.project-row{grid-template-columns:1fr}.project-img{width:100%;height:170px}.form-grid{grid-template-columns:1fr}.brand h1{font-size:21px}.logo{width:50px;height:50px}.top-icons{gap:7px}.round{width:44px;height:44px}.kpi-grid{grid-template-columns:1fr 1fr}.toolbar{align-items:stretch}.toolbar input,.toolbar select{min-width:220px}.detail-img{height:220px}}
+</style>
+
+<style id="msf-v25-bottom-visible-fix">
+/* v25 preview: onderkant zichtbaar + veilige scroll */
+html, body {
+  min-height: 100%;
+  height: auto !important;
+  overflow-y: auto !important;
+  overscroll-behavior: auto;
+}
+
+body {
+  padding-bottom: 0 !important;
+}
+
+.page {
+  min-height: auto !important;
+  padding-bottom: 120px !important;
+  overflow: visible !important;
+}
+
+.card,
+.panel,
+.project-list,
+.sidebar,
+.tablewrap,
+.admin-box,
+.chat-users,
+.chat-main {
+  min-height: 0;
+}
+
+/* Geen afgesneden onderkanten meer door calc(100vh...) */
+.project-list,
+.sidebar,
+.tablewrap {
+  max-height: none !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* Tabellen blijven wel horizontaal scrollbaar */
+.tablewrap,
+.admin-table-scroll {
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Kaart krijgt vaste nette hoogte, maar snijdt de pagina niet af */
+.mapbox {
+  height: 620px !important;
+  min-height: 480px !important;
+  max-height: none !important;
+}
+
+.detail-map {
+  height: 380px !important;
+  min-height: 320px !important;
+}
+
+/* Chat moet zichtbaar blijven en binnen eigen venster scrollen */
+.chat-layout {
+  height: auto !important;
+  min-height: 620px !important;
+}
+
+.chat-main {
+  min-height: 620px !important;
+}
+
+.chat-stream {
+  min-height: 430px !important;
+  max-height: 520px !important;
+  overflow-y: auto !important;
+}
+
+/* Navigatie mag scrollen bij smalle schermen */
+.navrow {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+/* Modal knoppen altijd bereikbaar */
+.modal {
+  max-height: 92vh !important;
+}
+
+.modal-body {
+  max-height: calc(92vh - 76px) !important;
+  overflow-y: auto !important;
+  padding-bottom: 90px !important;
+}
+
+.modal-actions {
+  position: sticky !important;
+  bottom: 0 !important;
+  background: #fff !important;
+  padding: 14px 0 0 !important;
+  box-shadow: 0 -8px 18px rgba(255,255,255,.92);
+}
+
+/* Mobiel: alles netjes onder elkaar */
+@media(max-width:1180px){
+  .page {
+    padding-bottom: 140px !important;
+  }
+  .mapbox {
+    height: 540px !important;
+  }
+  .chat-layout,
+  .chat-main {
+    min-height: 560px !important;
+  }
+}
+
+@media(max-width:720px){
+  .page {
+    padding-bottom: 160px !important;
+  }
+  .mapbox {
+    height: 460px !important;
+  }
+  .chat-stream {
+    max-height: 420px !important;
+  }
+}
+</style>
+
+
+<style id="msf-v26-scroll-and-bars">
+/* v26: volledige pagina scrollbaar + statusbalken zichtbaar */
+html, body {
+  height: auto !important;
+  min-height: 100% !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #9fb3d1 #edf2f8;
+}
+
+body::-webkit-scrollbar,
+.project-list::-webkit-scrollbar,
+.sidebar::-webkit-scrollbar,
+.tablewrap::-webkit-scrollbar,
+.chat-stream::-webkit-scrollbar,
+.admin-table-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+body::-webkit-scrollbar-thumb,
+.project-list::-webkit-scrollbar-thumb,
+.sidebar::-webkit-scrollbar-thumb,
+.tablewrap::-webkit-scrollbar-thumb,
+.chat-stream::-webkit-scrollbar-thumb,
+.admin-table-scroll::-webkit-scrollbar-thumb {
+  background: #9fb3d1;
+  border-radius: 999px;
+}
+
+body::-webkit-scrollbar-track,
+.project-list::-webkit-scrollbar-track,
+.sidebar::-webkit-scrollbar-track,
+.tablewrap::-webkit-scrollbar-track,
+.chat-stream::-webkit-scrollbar-track,
+.admin-table-scroll::-webkit-scrollbar-track {
+  background: #edf2f8;
+}
+
+.page {
+  padding-bottom: 150px !important;
+  overflow: visible !important;
+}
+
+.msf-alert-bars {
+  max-width: 1540px;
+  margin: 18px auto 0;
+  padding: 0 22px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.msf-alert-bar {
+  min-height: 64px;
+  border-radius: 16px;
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #d8e2f2;
+  box-shadow: 0 8px 22px rgba(8,40,86,.07);
+  background: #fff;
+}
+
+.msf-alert-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  flex: 0 0 auto;
+}
+
+.msf-alert-bar.done .msf-alert-icon {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.msf-alert-bar.assigned .msf-alert-icon {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.msf-alert-bar.project .msf-alert-icon {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.msf-alert-title {
+  font-weight: 800;
+  color: #0b2146;
+  line-height: 1.15;
+}
+
+.msf-alert-sub {
+  font-size: 12px;
+  color: #70809d;
+  margin-top: 3px;
+}
+
+.project-list,
+.sidebar,
+.tablewrap {
+  overflow-y: auto !important;
+  overflow-x: auto !important;
+  max-height: calc(100vh - 260px) !important;
+  min-height: 420px;
+}
+
+.projects-layout,
+.tasks-layout,
+.chat-layout,
+.admin-grid,
+.detail-grid {
+  align-items: start;
+}
+
+.mapbox {
+  height: calc(100vh - 260px) !important;
+  min-height: 520px !important;
+}
+
+.table {
+  min-width: 940px;
+}
+
+@media(max-width:1180px){
+  .msf-alert-bars {
+    grid-template-columns: 1fr;
+  }
+
+  .project-list,
+  .sidebar,
+  .tablewrap {
+    max-height: none !important;
+    min-height: auto;
+  }
+
+  .mapbox {
+    height: 560px !important;
+  }
+}
+
+@media(max-width:720px){
+  .msf-alert-bars {
+    padding: 0 12px;
+  }
+
+  .msf-alert-bar {
+    min-height: 58px;
+    padding: 11px 13px;
+  }
+
+  .page {
+    padding-bottom: 170px !important;
+  }
+}
+</style>
+
+
+<style id="msf-v27-activity-messages">
+.bottom-grid {
+  max-width:1540px;
+  margin: 20px auto 0;
+  padding: 0 22px 150px;
+  display:grid;
+  grid-template-columns: minmax(360px,.9fr) minmax(520px,1.6fr);
+  gap:18px;
+}
+.bottom-card {
+  background:#fff;
+  border:1px solid #d8e2f2;
+  border-radius:18px;
+  box-shadow:0 8px 28px rgba(8,40,86,.08);
+  padding:22px 26px;
+  min-height:180px;
+}
+.bottom-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:18px;
+}
+.bottom-head h3 {
+  margin:0;
+  font-size:24px;
+  color:#0b2146;
+}
+.link-btn {
+  background:transparent;
+  color:#0b5bd3;
+  font-weight:800;
+  font-size:17px;
+  padding:0;
+}
+.message-btn {
+  height:46px;
+  padding:0 22px;
+  border-radius:12px;
+  background:#fff;
+  color:#0b2146;
+  font-weight:800;
+  border:1px solid #d8e2f2;
+}
+.activity-row,
+.message-row {
+  padding:12px 0;
+  border-bottom:1px solid #edf1f7;
+  color:#33486c;
+  line-height:1.45;
+}
+.activity-row:last-child,
+.message-row:last-child {
+  border-bottom:0;
+}
+.activity-time,
+.message-time {
+  display:block;
+  color:#70809d;
+  font-size:12px;
+  margin-top:3px;
+}
+@media(max-width:900px){
+  .bottom-grid {
+    grid-template-columns:1fr;
+    padding:0 12px 160px;
+  }
+}
+</style>
+
+
+<style id="msf-v28-onepage-project-image">
+/* v28: schermvullend dashboard zonder body-scroll op desktop */
+@media(min-width:1181px){
+  html, body {
+    height: 100vh !important;
+    overflow: hidden !important;
+  }
+
+  #app {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .top {
+    min-height: 74px !important;
+    height: 74px !important;
+    padding: 8px 20px !important;
+  }
+
+  .logo {
+    width: 52px !important;
+    height: 52px !important;
+  }
+
+  .brand h1 {
+    font-size: 23px !important;
+  }
+
+  .brand small {
+    font-size: 12px !important;
+  }
+
+  .searchbox input {
+    height: 50px !important;
+    font-size: 17px !important;
+  }
+
+  .searchbox span {
+    top: 12px !important;
+  }
+
+  .round {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 19px !important;
+  }
+
+  .logout {
+    height: 38px !important;
+  }
+
+  .navrow {
+    top: 74px !important;
+    height: 56px !important;
+    gap: 12px !important;
+    padding: 0 20px !important;
+  }
+
+  .navbtn {
+    height: 40px !important;
+    font-size: 14px !important;
+    padding: 0 13px !important;
+  }
+
+  .msf-alert-bars {
+    margin-top: 10px !important;
+    gap: 10px !important;
+  }
+
+  .msf-alert-bar {
+    min-height: 52px !important;
+    padding: 9px 13px !important;
+  }
+
+  .msf-alert-icon {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 17px !important;
+  }
+
+  .msf-alert-title {
+    font-size: 14px !important;
+  }
+
+  .msf-alert-sub {
+    font-size: 11px !important;
+  }
+
+  .page {
+    height: calc(100vh - 205px) !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    padding: 14px 22px 14px !important;
+    max-width: 1540px !important;
+  }
+
+  .hero {
+    margin-bottom: 12px !important;
+  }
+
+  .hero h2 {
+    font-size: 24px !important;
+  }
+
+  .hero p {
+    font-size: 13px !important;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 10px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .kpi {
+    padding: 14px 16px !important;
+  }
+
+  .kpi strong {
+    font-size: 26px !important;
+    margin: 4px 0 !important;
+  }
+
+  .home-grid {
+    grid-template-columns: minmax(0,1.25fr) minmax(320px,.75fr) !important;
+    gap: 12px !important;
+    height: calc(100% - 124px) !important;
+    min-height: 0 !important;
+  }
+
+  .panel {
+    padding: 16px !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .home-grid > .panel:first-child {
+    overflow-y: auto !important;
+  }
+
+  .home-grid > aside.panel {
+    overflow-y: auto !important;
+  }
+
+  .panel h3 {
+    font-size: 19px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .project-row {
+    grid-template-columns: 118px minmax(0,1fr) 92px 110px !important;
+    gap: 12px !important;
+    min-height: 104px !important;
+    padding: 9px 11px !important;
+    margin-bottom: 9px !important;
+  }
+
+  .project-img {
+    width: 118px !important;
+    height: 82px !important;
+  }
+
+  .project-title {
+    font-size: 15px !important;
+    margin-bottom: 4px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .project-address {
+    font-size: 12px !important;
+    margin-bottom: 5px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .project-meta {
+    font-size: 11px !important;
+    gap: 10px !important;
+  }
+
+  .project-row .progress {
+    height: 7px !important;
+  }
+
+  .badge {
+    padding: 6px 9px !important;
+    font-size: 12px !important;
+  }
+
+  .project-card-mapshot {
+    width: 108px;
+    height: 82px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #d8e2f2;
+    background: #eef4fb;
+    display: block;
+    position: relative;
+    flex: 0 0 auto;
+  }
+
+  .project-card-mapshot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .project-card-mapshot span {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    background: rgba(6,31,71,.86);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 3px 5px;
+    border-radius: 6px;
+  }
+
+  .bottom-grid {
+    display: none !important;
+  }
+
+  .projects-layout,
+  .tasks-layout,
+  .chat-layout,
+  .admin-grid,
+  .detail-grid {
+    height: calc(100vh - 220px) !important;
+    min-height: 0 !important;
+  }
+
+  .project-list,
+  .sidebar,
+  .tablewrap,
+  .chat-stream,
+  .admin-table-scroll {
+    max-height: none !important;
+    height: 100% !important;
+    overflow: auto !important;
+  }
+
+  .mapbox {
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+
+  .detail-img {
+    height: 220px !important;
+  }
+
+  .detail-map {
+    height: 300px !important;
+  }
+}
+
+/* Mobiel/tablet blijft gewoon scrollbaar */
+@media(max-width:1180px){
+  html, body {
+    overflow-y: auto !important;
+  }
+
+  .project-card-mapshot {
+    display: none;
+  }
+}
+</style>
+
+
+<style id="msf-v28-streetview-safe-patch">
+/* Behoud originele v28 app, maar verwijder rechterbeeldje en gebruik linkerbeeld als adresbeeld */
+@media(min-width:1181px){
+  .project-row {
+    grid-template-columns: 150px minmax(0,1fr) 96px !important;
+  }
+
+  .project-img {
+    width: 150px !important;
+    height: 104px !important;
+    object-fit: cover !important;
+    background:#eef4fb !important;
+  }
+
+  .project-card-mapshot {
+    display: none !important;
+  }
+}
+
+@media(max-width:1180px){
+  .project-card-mapshot {
+    display: none !important;
+  }
+}
+</style>
+
+
+<style id="msf-v31-working-messages">
+.messages-page {
+  height: calc(100vh - 205px);
+  max-width: 1540px;
+  margin: 0 auto;
+  padding: 14px 22px 22px;
+  display: grid;
+  grid-template-columns: 360px minmax(0,1fr);
+  gap: 14px;
+  min-height: 560px;
+  overflow:hidden;
+}
+.messages-sidebar,.messages-main{
+  background:#fff;border:1px solid #d8e2f2;border-radius:18px;
+  box-shadow:0 8px 28px rgba(8,40,86,.08);min-height:0;
+}
+.messages-sidebar{padding:20px;overflow-y:auto}
+.messages-sidebar h3{margin:0 0 18px;font-size:22px;color:#0b2146}
+.channel-row{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:13px;cursor:pointer;margin-bottom:8px}
+.channel-row:hover,.channel-row.active{background:#eef5ff}
+.channel-avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;flex:0 0 auto;background:#123d72}
+.channel-row b{color:#0b2146;font-size:16px}.channel-row small{color:#52657f;display:block;margin-top:2px}
+.messages-main{display:flex;flex-direction:column;overflow:hidden}
+.messages-head{padding:22px 24px 10px;border-bottom:1px solid #edf1f7}
+.messages-head h2{margin:0 0 6px;color:#0b2146;font-size:24px}
+.messages-head p{margin:0;color:#70809d}
+.messages-stream{flex:1;min-height:0;overflow-y:auto;padding:12px 24px 18px}
+.message-item{display:grid;grid-template-columns:54px 1fr 70px;gap:14px;align-items:start;padding:18px 0;border-bottom:1px solid #edf1f7}
+.message-item:last-child{border-bottom:0}
+.message-avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;background:#123d72}
+.message-body b{display:block;color:#0b2146;margin-bottom:7px;font-size:16px}
+.message-body div{color:#263a5e;line-height:1.55}
+.message-time{color:#70809d;font-size:13px;text-align:right}
+.messages-input{flex:0 0 auto;display:flex;gap:12px;padding:14px 18px;border-top:1px solid #d8e2f2;background:#fff}
+.messages-input textarea{flex:1;min-height:52px;max-height:120px;resize:vertical;border:2px solid #d8e2f2;border-radius:13px;padding:13px 15px;color:#0b2146!important;background:#fff!important;outline:none;font:inherit}
+.messages-input textarea::placeholder{color:#7b8aa5}
+.messages-input textarea:focus{border-color:#0b5bd3;box-shadow:0 0 0 4px rgba(11,91,211,.10)}
+.messages-send{width:132px;border-radius:13px;background:linear-gradient(135deg,#ef6c0f,#ff9f3d);color:#fff;font-weight:800;border:0}
+@media(max-width:1000px){
+  .messages-page{height:auto;grid-template-columns:1fr;overflow:visible}
+  .messages-main{min-height:620px}
+}
+</style>
+
+
+<style id="msf-v32-chat-image-fixes">
+.project-card-mapshot{display:none!important}
+@media(min-width:1181px){
+  .project-row{grid-template-columns:150px minmax(0,1fr) 96px!important}
+  .project-img{width:150px!important;height:104px!important;object-fit:cover!important}
+}
+input,textarea,select{color:#0b2146!important;background:#fff!important;caret-color:#0b2146!important}
+input::placeholder,textarea::placeholder{color:#7b8aa5!important;opacity:1!important}
+.searchbox input,.search input,.top .searchbox input,.top .search input{color:#fff!important;background:rgba(255,255,255,.08)!important;caret-color:#fff!important}
+.searchbox input::placeholder,.search input::placeholder{color:#d6e2f3!important}
+.messages-input textarea{color:#0b2146!important;background:#fff!important}
+.channel-row.active{background:#eaf2ff!important;border-left:4px solid #0b5bd3}
+</style>
+
+
+<style id="msf-v33-chat-upload-task-fit">
+/* v33: chat uploads + taken beter passend */
+.task-table-wrap,
+.tablewrap {
+  padding: 14px !important;
+  overflow: auto !important;
+}
+
+.table,
+.admin-table {
+  min-width: 760px !important;
+  font-size: 13px !important;
+}
+
+.table th,
+.table td {
+  padding: 9px 10px !important;
+  font-size: 13px !important;
+  white-space: nowrap !important;
+}
+
+.table td:nth-child(2),
+.table th:nth-child(2) {
+  min-width: 220px;
+}
+
+.table td:nth-child(3),
+.table th:nth-child(3) {
+  max-width: 210px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table td:nth-child(4),
+.table th:nth-child(4) {
+  min-width: 180px;
+}
+
+.status-pill,
+.badge,
+.pill {
+  padding: 5px 9px !important;
+  font-size: 12px !important;
+}
+
+.bubble,
+.message-avatar,
+.channel-avatar {
+  width: 34px !important;
+  height: 34px !important;
+  font-size: 13px !important;
+}
+
+.messages-input {
+  align-items: flex-end;
+}
+
+.chat-upload-label {
+  height: 52px;
+  min-width: 52px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #d8e2f2;
+  background: #fff;
+  color: #0b2146;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.chat-upload-label:hover {
+  border-color: #0b5bd3;
+  background: #eef5ff;
+}
+
+.chat-upload-label input {
+  display: none !important;
+}
+
+.message-photo {
+  display: block;
+  max-width: 360px;
+  max-height: 240px;
+  border-radius: 12px;
+  margin-top: 10px;
+  border: 1px solid #d8e2f2;
+  object-fit: cover;
+}
+
+.message-delete {
+  margin-top: 8px;
+  background: #fff5f5;
+  border: 1px solid #ffcaca;
+  color: #ef4444;
+  border-radius: 8px;
+  padding: 5px 9px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.message-delete:hover {
+  background: #fee2e2;
+}
+
+.messages-stream {
+  padding-bottom: 24px !important;
+}
+
+@media(max-width:900px){
+  .table,
+  .admin-table {
+    min-width: 720px !important;
+  }
+
+  .message-photo {
+    max-width: 100%;
+  }
+}
+</style>
+
+
+<style id="msf-v34-scroll-taken-beheer">
+/* v34: Takenoverzicht en Beheer volledig scrollbaar */
+html,
+body {
+  height: auto !important;
+  min-height: 100% !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+#app {
+  min-height: 100vh !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* Algemene pagina's mogen doorlopen */
+.page {
+  min-height: calc(100vh - 160px) !important;
+  height: auto !important;
+  overflow: visible !important;
+  padding-bottom: 180px !important;
+}
+
+/* Takenpagina */
+.tasks-layout {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  align-items: start !important;
+}
+
+.tasks-projects,
+.sidebar {
+  height: auto !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  overflow-y: visible !important;
+  overflow-x: hidden !important;
+}
+
+.task-table-wrap,
+.tablewrap {
+  height: auto !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  padding-bottom: 80px !important;
+}
+
+/* Tabellen blijven horizontaal scrollbaar */
+.table-shell,
+.nowrap-scroll,
+.admin-table-scroll {
+  width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table,
+.admin-table {
+  min-width: 900px !important;
+}
+
+/* Beheerpagina */
+.admin-grid {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  align-items: start !important;
+  padding-bottom: 80px !important;
+}
+
+.admin-box,
+.stack {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.admin-compact,
+.compact-page {
+  height: auto !important;
+  min-height: calc(100vh - 160px) !important;
+  overflow: visible !important;
+  padding-bottom: 180px !important;
+}
+
+.footer {
+  margin-bottom: 80px !important;
+}
+
+/* Sticky top blijft bruikbaar, maar mag niet content afsnijden */
+.top,
+.navrow {
+  position: sticky;
+}
+
+/* Scrollbar zichtbaar en netjes */
+body::-webkit-scrollbar,
+.tablewrap::-webkit-scrollbar,
+.task-table-wrap::-webkit-scrollbar,
+.admin-table-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+body::-webkit-scrollbar-thumb,
+.tablewrap::-webkit-scrollbar-thumb,
+.task-table-wrap::-webkit-scrollbar-thumb,
+.admin-table-scroll::-webkit-scrollbar-thumb {
+  background: #9fb3d1;
+  border-radius: 999px;
+}
+
+body::-webkit-scrollbar-track,
+.tablewrap::-webkit-scrollbar-track,
+.task-table-wrap::-webkit-scrollbar-track,
+.admin-table-scroll::-webkit-scrollbar-track {
+  background: #edf2f8;
+}
+
+/* Mobiel/tablet idem, maar meer onderruimte */
+@media(max-width:1180px){
+  .page,
+  .admin-compact,
+  .compact-page {
+    padding-bottom: 220px !important;
+  }
+
+  .tasks-layout,
+  .admin-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .table,
+  .admin-table {
+    min-width: 760px !important;
+  }
+}
+</style>
+
+
+<style id="msf-v35-admin-scroll-lock">
+/* Beheerpagina volledig scrollbaar */
+.admin-page,
+.admin-wrap,
+.admin-content,
+.admin-grid,
+.admin-compact{
+  height:auto !important;
+  min-height:calc(100vh - 140px) !important;
+  max-height:none !important;
+  overflow:visible !important;
+}
+
+.admin-grid{
+  align-items:start !important;
+  padding-bottom:220px !important;
+}
+
+.admin-box{
+  overflow:visible !important;
+  height:auto !important;
+  max-height:none !important;
+}
+
+.admin-table-wrap,
+.admin-table-scroll{
+  overflow:auto !important;
+  max-width:100% !important;
+  padding-bottom:40px !important;
+}
+</style>
+
+</head>
+<body>
+<div id="splash" class="splash"><div><img src="https://www.meesterschildersfriesland.nl/wp-content/uploads/2024/12/MSF-logo-vierkant.jpg" onerror="this.style.display='none'"><h1>MSF Projecten</h1><p>MEESTERSCHILDERS FRIESLAND BV</p><div class="spin"></div></div></div>
+<div id="app"></div><div id="toast" class="toast"></div>
+<script>
+(function(){
+'use strict';
+
+var STORE='msf_v24_';
+var TEAM_DEFAULT=[
+{id:1,name:'Menno Boels',role:'Directeur',av:'MB',color:'#123d72',pw:'msf-menno2026',admin:false,email:'m.boels@meesterschildersfriesland.nl'},
+{id:2,name:'Arjen Huitenga',role:'Projectleider',av:'AH',color:'#f47b16',pw:'msf-arjen2026',admin:false,email:'a.huitenga@meesterschildersfriesland.nl'},
+{id:3,name:'Marten Hospes',role:'Projectleider',av:'MH',color:'#21a55b',pw:'msf-marten2026',admin:false,email:'m.hospes@meesterschildersfriesland.nl'},
+{id:4,name:'Hilco Waalboer',role:'Beheerder / Calculator / Planvoorbereider',av:'HW',color:'#7b47b8',pw:'msf-hilco2026',admin:true,email:'h.waalboer@meesterschildersfriesland.nl'},
+{id:5,name:'Patrick Kortekaas',role:'Werkvoorbereider',av:'PK',color:'#1786c8',pw:'msf-patrick2026',admin:false,email:'p.kortekaas@meesterschildersfriesland.nl'},
+{id:6,name:'Sabine Loeff',role:'Woonconsulent',av:'SL',color:'#c5542b',pw:'msf-sabine2026',admin:false,email:'s.loeff@meesterschildersfriesland.nl'},
+{id:7,name:'Liesbeth Bloemhof',role:'Administratie',av:'LB',color:'#5d6bc8',pw:'msf-liesbeth2026',admin:false,email:'l.bloemhof@meesterschildersfriesland.nl'}];
+
+var PROJECTS_DEFAULT=[
+{id:1,name:'Boornesbfreder 27 Harlingen',address:'Boornesbfreder 27',postcode:'8861AA',city:'Harlingen',status:'Actief',progress:65,start:'2026-05-12',end:'',assignees:[1,4],notes:'Schilderwerk en opname aan woning.'},
+{id:2,name:'Woning renovatie Franeker',address:'Voorstraat 18',postcode:'8801AB',city:'Franeker',status:'Actief',progress:40,start:'2026-06-01',end:'',assignees:[2,3],notes:'Renovatie en schilderwerk.'},
+{id:3,name:'Appartementencomplex Leeuwarden',address:'Achterstraat 14',postcode:'8911GC',city:'Leeuwarden',status:'Gepland',progress:15,start:'2026-04-20',end:'',assignees:[2,3,5,6],notes:'Meerjarig onderhoud.'},
+{id:4,name:'Woonhuis Boornbergum',address:'Ijippeblom 9',postcode:'9212PA',city:'Boornbergum',status:'Actief',progress:65,start:'2026-05-01',end:'2026-06-15',assignees:[2,4],notes:'Buitenschilderwerk woonhuis.'},
+{id:5,name:'Gemeentewerf Ballum',address:'Reeweg 4',postcode:'9162ED',city:'Ballum',status:'Gepland',progress:0,start:'',end:'',assignees:[4],notes:'Opname gepland.'},
+{id:6,name:'Appartementencomplex Heerenveen',address:'Van Harinxmaweg 22',postcode:'8442CA',city:'Heerenveen',status:'Afgerond',progress:100,start:'2026-03-01',end:'2026-04-25',assignees:[2,3,5,6],notes:'Afgerond en opgeleverd.'}
+];
+
+var TASKS_DEFAULT=[
+{id:1,project_id:4,title:'Inspectie en opname',assignee:4,deadline:'2026-05-10',status:'Voltooid',priority:'Hoog'},
+{id:2,project_id:4,title:'Offerte opstellen',assignee:2,deadline:'2026-05-12',status:'Voltooid',priority:'Normaal'},
+{id:3,project_id:4,title:'Steiger plaatsen',assignee:3,deadline:'2026-05-15',status:'Voltooid',priority:'Hoog'},
+{id:4,project_id:4,title:'Buitenschilderwerk begane grond',assignee:4,deadline:'2026-05-25',status:'In uitvoering',priority:'Hoog'},
+{id:5,project_id:4,title:'Buitenschilderwerk verdieping',assignee:2,deadline:'2026-06-05',status:'In uitvoering',priority:'Normaal'},
+{id:6,project_id:4,title:'Kozijnen afkitten',assignee:3,deadline:'2026-06-10',status:'Te doen',priority:'Normaal'},
+{id:7,project_id:2,title:'Ondergrond reinigen',assignee:3,deadline:'2026-06-03',status:'Te doen',priority:'Normaal'},
+{id:8,project_id:1,title:'Houtrot controle',assignee:4,deadline:'2026-05-20',status:'Te doen',priority:'Hoog'}
+];
+
+var TEMPLATES_DEFAULT=[
+{name:'Buitenschilderwerk standaard',type:'Taak',items:['Voorsituatie fotograferen','Ondergrond reinigen','Houtrot controleren','Grondverf','Eerste laag','Tweede laag','Opleverfoto']},
+{name:'RGS inspectie',type:'Project',items:['Inspectie','Conditiemeting','Scenario','Uitvoering','Evaluatie']},
+{name:'Onderhoudsproject',type:'Project',items:['Opname','Werkvoorbereiding','Uitvoering','Controle','Oplevering']}
+];
+
+var ROLES_DEFAULT=[
+{name:'Beheerder',rights:['Alles beheren','Teamleden wijzigen','Data exporteren']},
+{name:'Projectleider',rights:['Projecten wijzigen','Taken beheren','Chat gebruiken']},
+{name:'Medewerker',rights:['Eigen taken afvinken','Chat gebruiken','Project bekijken']},
+{name:'Klant',rights:['Alleen lezen','Rapport bekijken']}
+];
+
+var FRIESLAND={'Leeuwarden':[53.2012,5.7999],'Franeker':[53.1879,5.5434],'Harlingen':[53.1742,5.4252],'Boornbergum':[53.1286,6.0544],'Ballum':[53.4457,5.6500],'Heerenveen':[52.9597,5.9186],'Bolsward':[53.0676,5.5285],'Drachten':[53.1127,6.0997],'Sneek':[53.0326,5.6580],'Dokkum':[53.3239,5.9986]};
+
+function load(k,d){try{var v=localStorage.getItem(STORE+k);return v?JSON.parse(v):d}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(STORE+k,JSON.stringify(v))}catch(e){}}
+function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function byId(id){return document.getElementById(id)}
+function toast(t){var e=byId('toast');if(!e)return;e.textContent=t;e.style.display='block';clearTimeout(window._toast);window._toast=setTimeout(function(){e.style.display='none'},2600)}
+function fmt(d){if(!d)return 'n.t.b.';var p=String(d).split('-');return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:d}
+function now(){return new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})}
+
+var TEAM=load('team',TEAM_DEFAULT);
+var PROJECTS=load('projects',PROJECTS_DEFAULT);
+var TASKS=load('tasks',TASKS_DEFAULT);
+var MESSAGES=load('messages',[
+{id:1,user:4,text:'Welkom in de teamchat. Deze chat werkt lokaal en blijft bewaard.',time:now()},
+{id:2,user:2,text:'Taken en meldingen zijn nu gekoppeld.',time:now()}
+]);
+var TEMPLATES=load('templates',TEMPLATES_DEFAULT);
+var ROLES=load('roles',ROLES_DEFAULT);
+
+var S={user:null,page:'home',modal:null,editing:null,loginSel:null,loginErr:'',search:'',taskMember:'all',taskProject:'all',selectedProject:null,chatTarget:'team',notifs:load('notifs',[]),showNotifs:false,chatChannel:'team',map:null,detailMap:null};
+
+function persist(){save('team',TEAM);save('projects',PROJECTS);save('tasks',TASKS);save('messages',MESSAGES);save('templates',TEMPLATES);save('roles',ROLES);save('notifs',S.notifs)}
+function person(id){return TEAM.find(function(x){return x.id==id})||TEAM[0]}
+function project(id){return PROJECTS.find(function(x){return x.id==id})||PROJECTS[0]}
+function cityFromPostcode(pc){pc=String(pc||'').replace(/\s/g,'').toUpperCase().slice(0,4);var map={'8911':'Leeuwarden','8912':'Leeuwarden','8801':'Franeker','8861':'Harlingen','9212':'Boornbergum','9162':'Ballum','8442':'Heerenveen','8701':'Bolsward','9201':'Drachten','8601':'Sneek','9101':'Dokkum'};return map[pc]||''}
+function normalizeCity(c){c=String(c||'').trim();if(!c)return '';var found=Object.keys(FRIESLAND).find(function(x){return x.toLowerCase()===c.toLowerCase()});return found||c.charAt(0).toUpperCase()+c.slice(1)}
+function fullAddress(p){return [p.address,p.postcode,normalizeCity(p.city)].filter(Boolean).join(', ')}
+function coordsForProject(p){var city=normalizeCity(p.city)||cityFromPostcode(p.postcode);if(FRIESLAND[city])return FRIESLAND[city];return [53.12,5.85]}
+function staticMapUrl(p,w,h,z){var c=coordsForProject(p);return 'https://staticmap.openstreetmap.de/staticmap.php?center='+c[0]+','+c[1]+'&zoom='+(z||15)+'&size='+(w||600)+'x'+(h||300)+'&markers='+c[0]+','+c[1]+',red-pushpin'}
+function streetViewUrl(p,w,h){return 'https://maps.googleapis.com/maps/api/streetview?size='+(w||600)+'x'+(h||300)+'&location='+encodeURIComponent(fullAddress(p)||p.city||'Friesland Nederland')+'&fov=80&heading=70&pitch=0'}
+function streetOpenUrl(p){var c=coordsForProject(p);return 'https://www.google.com/maps?q=&layer=c&cbll='+c[0]+','+c[1]}
+
+function msfStreetViewForProject(p){
+  var addr=(fullAddress(p)||'').toLowerCase();
+
+  if(addr.indexOf('ljippeblom')>-1 || addr.indexOf('ijippeblom')>-1 || addr.indexOf('boornbergum')>-1){
+    return 'https://streetviewpixels-pa.googleapis.com/v1/thumbnail?cb_client=maps_sv.tactile&w=900&h=600&pitch=-11.384691219298944&panoid=_QTJPxrRO3q8Xg64LfrqXg&yaw=249.17474163257836';
+  }
+
+  // Betrouwbare fallback: kaartbeeld op basis van adres/postcode/woonplaats.
+  // Dit voorkomt de kapotte Google StreetView-afbeeldingen zonder API-key.
+  return staticMapUrl(p,700,420,16);
+}
+
+function projectVisual(p){return msfStreetViewForProject(p)}
+function avatar(m){return '<span class="bubble" style="background:'+esc(m.color||'#123d72')+'">'+esc(m.av||'?')+'</span>'}
+function addNotif(text,forUser,play){S.notifs.unshift({id:Date.now(),text:text,time:now(),read:false,forUser:forUser||null});if(S.notifs.length>50)S.notifs.pop();persist();if(play)tryBell();updateNotifBadge()}
+function visibleNotifs(){return S.notifs.filter(function(n){return !n.forUser||!S.user||n.forUser===S.user.id})}
+function updateNotifBadge(){var b=byId('notif-count');if(b){var n=visibleNotifs().filter(function(x){return !x.read}).length;b.textContent=n;b.style.display=n?'':'none'}}
+function tryBell(){try{var ctx=new(window.AudioContext||window.webkitAudioContext)();[880,1100,1320].forEach(function(f,i){var o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);var t=ctx.currentTime+i*.11;o.frequency.value=f;g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(.18,t+.03);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.start(t);o.stop(t+.32)})}catch(e){}}
+
+function render(){if(!S.user){renderLogin();return}var app=byId('app');app.innerHTML=topbar()+pageHtml()+modalHtml();bindSearch();updateNotifBadge();if(S.page==='projects')setTimeout(drawProjectsMap,50);if(S.page==='project')setTimeout(drawDetailMap,50)}
+function renderPageOnly(){var p=document.querySelector('main.page');if(p)p.outerHTML=pageHtml();else render();if(S.page==='projects')setTimeout(drawProjectsMap,50);if(S.page==='project')setTimeout(drawDetailMap,50)}
+function renderLogin(){byId('app').innerHTML='<div class="login"><div class="login-card"><div class="login-head"><img src="https://www.meesterschildersfriesland.nl/wp-content/uploads/2024/12/MSF-logo-vierkant.jpg"><h1>MSF Projecten</h1><p>Meesterschilders Friesland BV</p></div><p style="font-weight:800;color:#c8d6ea">Selecteer je naam</p><div class="users">'+TEAM.map(function(m){return '<button class="user-btn '+(S.loginSel===m.id?'on':'')+'" onclick="MSF.selLogin('+m.id+')">'+avatar(m)+'<span><b>'+esc(m.name.split(' ')[0])+'</b><br><small>'+esc(m.role)+'</small></span></button>'}).join('')+'</div>'+(S.loginSel?loginFields():'<p style="text-align:center;color:#9fb2ce">Selecteer eerst je naam</p>')+(S.loginErr?'<p style="color:#ffb4b4;font-weight:800">'+esc(S.loginErr)+'</p>':'')+'</div></div>'}
+function loginFields(){var mem=load('login_memory',{}), v=mem[S.loginSel]||'';return '<input id="loginPw" type="password" placeholder="Wachtwoord" value="'+esc(v)+'" onkeydown="if(event.key===\'Enter\')MSF.doLogin()"><label class="remember-row"><input type="checkbox" id="rememberPw" '+(v?'checked':'')+'> Naam en wachtwoord onthouden</label><button class="btn orange" style="width:100%;margin-top:12px" onclick="MSF.doLogin()">Inloggen</button>'}
+
+function topbar(){return '<div class="top"><div class="brand"><img class="logo" src="https://www.meesterschildersfriesland.nl/wp-content/uploads/2024/12/MSF-logo-vierkant.jpg" onerror="this.style.display=\'none\'"><div><h1>MSF Projecten</h1><small><span class="live-dot"></span>Werkend platform • v32 Chat & afbeeldingen</small></div></div><div class="searchbox"><span>⌕</span><input id="topSearch" value="'+esc(S.search)+'" placeholder="Zoek project, locatie, teamlid..." autocomplete="off"></div><div class="top-icons"><div style="position:relative"><div class="round" onclick="MSF.toggleNotifs()">🔔<b id="notif-count" class="count" style="display:none">0</b></div>'+(S.showNotifs?notifPanel():'')+'</div><div class="round" onclick="MSF.go(\'chat\')">💬</div><div class="round avatar">'+esc(S.user.av)+'</div><button class="logout" onclick="MSF.logout()">Uitloggen</button></div></div><div class="navrow">'+nav('home','🏠','Overzicht')+nav('projects','📍','Projecten & kaart')+nav('tasks','✅','Taken')+nav('chat','💬','Messages')+nav('team','👥','Team')+nav('reports','▥','Rapporten')+nav('admin','⚙','Beheer')+'</div>'+statusBars()}
+function nav(p,i,t){return '<button class="navbtn '+(S.page===p?'on':'')+'" onclick="MSF.go(\''+p+'\')"><span>'+i+'</span>'+t+'</button>'}
+
+function statusBars(){
+  var done=S.notifs.filter(function(n){return String(n.text||'').toLowerCase().indexOf('afgevinkt')>-1}).length;
+  var assigned=S.notifs.filter(function(n){return String(n.text||'').toLowerCase().indexOf('toegewezen')>-1&&String(n.text||'').toLowerCase().indexOf('project')===-1}).length;
+  var projects=S.notifs.filter(function(n){return String(n.text||'').toLowerCase().indexOf('project toegewezen')>-1||String(n.text||'').toLowerCase().indexOf('nieuw project')>-1}).length;
+
+  if(!done)done=TASKS.filter(function(t){return t.status==='Voltooid'}).length;
+  if(!assigned)assigned=TASKS.filter(function(t){return t.assignee===S.user.id&&t.status!=='Voltooid'}).length;
+  if(!projects)projects=PROJECTS.filter(function(p){return (p.assignees||[]).indexOf(S.user.id)>-1}).length;
+
+  return '<div class="msf-alert-bars">'
+    +'<div class="msf-alert-bar done"><div class="msf-alert-icon">✓</div><div><div class="msf-alert-title">'+done+' taken afgevinkt</div><div class="msf-alert-sub">Voltooide werkzaamheden zichtbaar voor het team</div></div></div>'
+    +'<div class="msf-alert-bar assigned"><div class="msf-alert-icon">↗</div><div><div class="msf-alert-title">'+assigned+' taken toegewezen</div><div class="msf-alert-sub">Open taken gekoppeld aan jouw account</div></div></div>'
+    +'<div class="msf-alert-bar project"><div class="msf-alert-icon">＋</div><div><div class="msf-alert-title">'+projects+' projecten toegewezen</div><div class="msf-alert-sub">Projecten waar jij in het team staat</div></div></div>'
+  +'</div>';
+}
+
+function bindSearch(){var i=byId('topSearch');if(i)i.oninput=function(){S.search=this.value;renderPageOnly()}}
+function notifPanel(){var ns=visibleNotifs();return '<div class="notif-panel"><div class="notif-head"><span>Meldingen</span><button onclick="MSF.markRead()">Alles gelezen</button></div>'+(ns.length?ns.slice(0,14).map(function(n){return '<div class="notif-item '+(n.read?'':'unread')+'"><div class="notif-msg">'+esc(n.text)+'</div><div class="notif-time">'+esc(n.time)+'</div></div>'}).join(''):'<div class="notif-item"><div class="notif-msg">Geen meldingen.</div></div>')+'</div>'}
+
+
+function bottomPanels(){
+  var acts=visibleNotifs().slice(0,4);
+  if(!acts.length){
+    acts=[
+      {text:'Jan de Vries heeft taak “Inspectie” voltooid',time:'Vandaag'},
+      {text:'Hilco heeft projectgegevens bijgewerkt',time:'Vandaag'}
+    ];
+  }
+  var msgs=MESSAGES.slice(-3).reverse();
+  return '<section class="bottom-grid">'
+    +'<div class="bottom-card"><div class="bottom-head"><h3>Activiteiten</h3><button class="link-btn" onclick="MSF.go(\'admin\')">Bekijk alles ›</button></div>'
+    +acts.map(function(a){return '<div class="activity-row">'+esc(a.text||a)+'<span class="activity-time">'+esc(a.time||'')+'</span></div>';}).join('')
+    +'</div>'
+    +'<div class="bottom-card"><div class="bottom-head"><h3>Berichten</h3><button class="message-btn" onclick="MSF.go(\'chat\')">Nieuw Bericht</button></div>'
+    +(msgs.length?msgs.map(function(m){var u=person(m.user);return '<div class="message-row"><b>'+esc(u.name)+':</b> '+esc(m.text)+'<span class="message-time">'+esc(m.time||'')+'</span></div>';}).join(''):'<div class="message-row">Geen nieuwe berichten.</div>')
+    +'</div>'
+  +'</section>';
+}
+
+
+
+function msfAllChats(){
+  var saved = load('msf_chat_channels_v32', null);
+  if(saved && typeof saved==='object') return saved;
+
+  var data = {
+    team:[
+      {id:101,channel:'team',user:4,time:'08:15',text:'Goedemorgen team! Vandaag starten we met de voorbereidingen voor Boornesbfreder 27 in Harlingen.'},
+      {id:102,channel:'team',user:2,time:'08:17',text:'Ik heb de tekeningen en materialen gecheckt. Alles is aanwezig.'},
+      {id:103,channel:'team',user:3,time:'08:21',text:'Top! Ik zorg dat de planning voor de eerste werkzaamheden in de app staat.'},
+      {id:104,channel:'team',user:1,time:'08:25',text:'Houd mij op de hoogte van de voortgang. Fijne werkdag allemaal!'},
+      {id:105,channel:'team',user:4,time:'08:26',text:'Komt goed, thanks!'}
+    ]
+  };
+
+  TEAM.forEach(function(m){
+    data['user_'+m.id] = [
+      {user:m.id,time:'09:00',text:'Privékanaal met '+m.name+'.'},
+      {user:S.user?S.user.id:4,time:'09:02',text:'Gebruik dit kanaal voor directe afstemming.'}
+    ];
+  });
+
+  save('msf_chat_channels_v32', data);
+  return data;
+}
+
+function msfSaveAllChats(data){
+  save('msf_chat_channels_v32', data);
+}
+
+function msfCurrentChatKey(){
+  return S.chatChannel || 'team';
+}
+
+
+function msfReadFileAsDataUrl(file, cb){
+  if(!file){cb(null);return;}
+  if(!file.type || file.type.indexOf('image/')!==0){
+    toast('Kies een afbeelding');
+    cb(null);
+    return;
+  }
+  if(file.size > 3 * 1024 * 1024){
+    toast('Afbeelding is te groot. Maximaal 3 MB.');
+    cb(null);
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(){ cb(reader.result); };
+  reader.onerror = function(){ toast('Afbeelding lezen mislukt'); cb(null); };
+  reader.readAsDataURL(file);
+}
+
+function msfCanDeleteMessage(msg){
+  return S.user && msg && msg.user === S.user.id;
+}
+
+function msfChatMessages(){
+  var all = msfAllChats();
+  var key = msfCurrentChatKey();
+  if(!all[key]) all[key] = [];
+  return all[key];
+}
+
+function msfChatTitle(){
+  var key = msfCurrentChatKey();
+  if(key==='team') return 'Teamchat';
+  var id = parseInt(String(key).replace('user_',''),10);
+  var m = person(id);
+  return m ? m.name : 'Chat';
+}
+
+function msfChatSubtitle(){
+  var key = msfCurrentChatKey();
+  if(key==='team') return 'Algemene projectcommunicatie voor het hele team.';
+  var id = parseInt(String(key).replace('user_',''),10);
+  var m = person(id);
+  return m ? 'Privékanaal met '+m.name+'. Berichten blijven lokaal bewaard.' : 'Berichten blijven lokaal bewaard.';
+}
+
+function msfChatPage(){
+  var msgs = msfChatMessages();
+  return '<main class="messages-page">'
+    + '<aside class="messages-sidebar"><h3>Kanalen</h3>'
+      + '<div class="channel-row '+(S.chatChannel==='team'||!S.chatChannel?'active':'')+'" onclick="MSF.openChatChannel(\'team\')"><span class="channel-avatar">TC</span><div><b>Teamchat</b><small>Algemene projectcommunicatie</small></div></div>'
+      + TEAM.map(function(m){return '<div class="channel-row '+(S.chatChannel===String(m.id)?'active':'')+'" onclick="MSF.openChatChannel(\''+m.id+'\')"><span class="channel-avatar" style="background:'+esc(m.color||'#123d72')+'">'+esc(m.av||'?')+'</span><div><b>'+esc(m.name)+'</b><small>'+esc(m.role||'')+'</small></div></div>';}).join('')
+    + '</aside>'
+    + '<section class="messages-main">'
+      + '<div class="messages-head"><h2>'+(S.chatChannel && S.chatChannel!=='team' ? esc(person(S.chatChannel).name) : 'Teamchat')+'</h2><p>Foto uploaden kan via de paperclip. Je kunt alleen je eigen berichten verwijderen.</p></div>'
+      + '<div class="messages-stream" id="messagesStream">'
+        + msgs.filter(function(msg){return (msg.channel||'team')===(S.chatChannel||'team');}).map(function(msg){
+            var u=person(msg.user);
+            return '<div class="message-item" data-msg="'+msg.id+'">'
+              + '<span class="message-avatar" style="background:'+esc(u.color||'#123d72')+'">'+esc(u.av||'?')+'</span>'
+              + '<div class="message-body"><b>'+esc(u.name)+'</b><div>'+esc(msg.text||'')+'</div>'
+              + (msg.image?'<img class="message-photo" src="'+esc(msg.image)+'">':'')
+              + (msfCanDeleteMessage(msg)?'<button class="message-delete" onclick="MSF.deleteMessage('+msg.id+')">Verwijder</button>':'')
+              + '</div>'
+              + '<div class="message-time">'+esc(msg.time||'')+'</div>'
+            + '</div>';
+          }).join('')
+      + '</div>'
+      + '<div class="messages-input">'
+        + '<label class="chat-upload-label" title="Foto uploaden">📎<input id="messageImage" type="file" accept="image/*"></label>'
+        + '<textarea id="messageText" placeholder="Typ je bericht hier..." onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();MSF.sendMessage()}"></textarea>'
+        + '<button class="messages-send" onclick="MSF.sendMessage()">➤ Verstuur</button>'
+      + '</div>'
+    + '</section>'
+  + '</main>';
+}
+
+function msfIsAdmin(){
+  if(!S.user) return false;
+  if(S.user.id===4) return true;
+  return S.user.admin===true;
+}
+
+function msfAdminDenied(){
+  return '<section class="page" style="padding:40px;display:flex;justify-content:center;align-items:flex-start">'
+    + '<div style="background:#fff;border:1px solid #d8e2f2;border-radius:24px;padding:42px;max-width:620px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,.08)">'
+    + '<h1 style="margin:0 0 14px;color:#0b2146">Geen toegang</h1>'
+    + '<p style="font-size:18px;color:#52657f;line-height:1.6">Deze pagina is alleen toegankelijk voor beheerders. Neem contact op met een beheerder als je extra rechten nodig hebt.</p>'
+    + '</div></section>';
+}
+
+function pageHtml(){if(S.page==='projects')return projectsPage();if(S.page==='project')return detailPage();if(S.page==='tasks')return tasksPage();if(S.page==='chat')return msfChatPage();if(S.page==='team')return teamPage();if(S.page==='reports')return reportsPage();if(S.page==='admin')return msfIsAdmin()?adminPage():msfAdminDenied();return homePage()}
+function qProjects(){var q=S.search.toLowerCase().trim();return !q?PROJECTS:PROJECTS.filter(function(p){return (p.name+' '+p.address+' '+p.postcode+' '+p.city+' '+p.status).toLowerCase().indexOf(q)>-1})}
+function stat(status){return PROJECTS.filter(function(p){return p.status===status}).length}
+function taskCount(st){return TASKS.filter(function(t){return t.status===st}).length}
+function homePage(){var active=PROJECTS.filter(function(p){return p.status==='Actief'}).slice(0,5);return '<main class="page"><div class="hero"><div><h2>Overzicht dashboard</h2><p>Compact één-scherm overzicht met KPI’s, projecten, signalen en adresbeelden.</p></div><div><button class="btn orange" onclick="MSF.openModal(\'project\')">＋ Nieuw project</button></div></div><section class="kpi-grid"><div class="card kpi"><small>Projecten totaal</small><strong>'+PROJECTS.length+'</strong><span>Alle actieve dossiers</span></div><div class="card kpi"><small>Actief</small><strong>'+stat('Actief')+'</strong><span>Lopende projecten</span></div><div class="card kpi"><small>Open taken</small><strong>'+TASKS.filter(function(t){return t.status!=='Voltooid'}).length+'</strong><span>Nog uitvoeren</span></div><div class="card kpi"><small>Meldingen</small><strong>'+visibleNotifs().filter(function(n){return !n.read}).length+'</strong><span>Ongelezen</span></div></section><section class="home-grid"><div class="card panel"><h3>Actieve projecten</h3>'+active.map(projectRow).join('')+'<button class="btn light" onclick="MSF.go(\'projects\')">Naar projecten & kaart</button></div><aside class="card panel"><h3>Vandaag belangrijk</h3><div class="line"><span>Taken voltooid</span><b>'+taskCount('Voltooid')+'</b></div><div class="line"><span>In uitvoering</span><b>'+taskCount('In uitvoering')+'</b></div><div class="line"><span>Te doen</span><b>'+taskCount('Te doen')+'</b></div><h3 style="margin-top:22px">Activiteiten</h3>'+visibleNotifs().slice(0,5).map(function(n){return '<div class="activity">'+esc(n.text)+'<br><small>'+esc(n.time)+'</small></div>'}).join('')+'</aside></section>'+bottomPanels()+'</main>'}
+function projectRow(p){
+  var mapImg=staticMapUrl(p,220,164,16);
+  var mapsUrl=streetOpenUrl(p);
+  return '<article class="project-row" onclick="MSF.openProject('+p.id+')">'
+    +'<img class="project-img" src="'+esc(projectVisual(p))+'" onerror="this.onerror=null;this.src=\''+esc(staticMapUrl(p,300,200,15))+'\'">'
+    +'<div><div class="project-title">'+esc(p.name)+'</div>'
+    +'<div class="project-address">📍 '+esc(fullAddress(p)||'Adres nog invullen')+'</div>'
+    +'<div class="project-meta"><span>Start: '+fmt(p.start)+'</span><span>Team: '+(p.assignees||[]).length+'</span><span>Adresbeeld</span></div>'
+    +'<div style="display:flex;align-items:center;gap:10px;margin-top:8px"><div class="progress '+(p.status==='Afgerond'?'green':p.status==='Gepland'?'orange':'')+'" style="flex:1"><i style="width:'+Number(p.progress||0)+'%"></i></div><b>'+Number(p.progress||0)+'%</b></div></div>'
+    +'<span class="badge '+p.status.toLowerCase()+'">'+esc(p.status)+'</span>'
+    +'<a class="project-card-mapshot" href="'+esc(mapsUrl)+'" target="_blank" onclick="event.stopPropagation()" title="Open adres in Google Maps / StreetView">'
+      +'<img src="'+esc(mapImg)+'" onerror="this.onerror=null;this.src=\''+esc(projectVisual(p))+'\'"><span>Maps</span></a>'
+    +'</article>';
+}
+function projectsPage(){var ps=qProjects();return '<main class="page"><div class="hero"><div><h2>Projecten & kaart</h2><p>Projectlijst en kaart staan nu in één scherm. Adressen sturen de kaartpositie.</p></div><div><button class="btn orange" onclick="MSF.openModal(\'project\')">＋ Nieuw project</button></div></div><section class="projects-layout"><div class="card project-list"><h3 style="margin-top:0">Projecten ('+ps.length+')</h3>'+ps.map(projectRow).join('')+'</div><div class="card mapbox" id="projectsMap"></div></section></main>'}
+function drawProjectsMap(){var el=byId('projectsMap');if(!el||typeof L==='undefined')return;if(S.map){S.map.remove();S.map=null}S.map=L.map('projectsMap').setView([53.15,5.86],9);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(S.map);var ms=[];qProjects().forEach(function(p){var c=coordsForProject(p);var m=L.marker(c).addTo(S.map).bindPopup('<b>'+esc(p.name)+'</b><br>'+esc(fullAddress(p))+'<br><button style="margin-top:8px;padding:7px 10px;border-radius:8px;border:0;background:#123d72;color:#fff;font-weight:800" onclick="MSF.openProject('+p.id+')">Open project</button>');ms.push(m)});if(ms.length){try{S.map.fitBounds(L.featureGroup(ms).getBounds().pad(.18))}catch(e){}}}
+function detailPage(){var p=project(S.selectedProject);var ts=TASKS.filter(function(t){return t.project_id===p.id});return '<main class="page"><div class="hero"><div><h2>'+esc(p.name)+'</h2><p>'+esc(fullAddress(p)||'Adres nog invullen')+'</p></div><div><button class="btn light" onclick="MSF.go(\'projects\')">← Projecten</button> <button class="btn orange" onclick="MSF.editProject('+p.id+')">✎ Bewerken</button></div></div><section class="detail-grid"><div class="card panel"><img class="detail-img" src="'+esc(projectVisual(p))+'" onerror="this.onerror=null;this.src=\''+esc(staticMapUrl(p,700,350,16))+'\'"><p><a href="'+esc(streetOpenUrl(p))+'" target="_blank">Open StreetView in Google Maps</a></p><div class="project-title">'+esc(p.name)+'</div><div class="project-address">📍 '+esc(fullAddress(p))+'</div><div style="display:flex;gap:12px;align-items:center;margin:15px 0"><div class="progress" style="flex:1"><i style="width:'+Number(p.progress||0)+'%"></i></div><b>'+p.progress+'%</b></div><div class="form-grid"><div class="line"><span>Status</span><b>'+esc(p.status)+'</b></div><div class="line"><span>Start</span><b>'+fmt(p.start)+'</b></div><div class="line"><span>Einde</span><b>'+fmt(p.end)+'</b></div><div class="line"><span>Team</span><b>'+(p.assignees||[]).map(function(id){return person(id).av}).join(', ')+'</b></div></div><h3>Notities</h3><p>'+esc(p.notes||'Geen notities.')+'</p></div><aside><div class="card panel"><h3>Projectkaart</h3><div class="detail-map" id="detailMap"></div></div><div class="card panel" style="margin-top:18px"><h3>Taken</h3>'+ts.map(function(t){return '<div class="line"><span>'+esc(t.title)+'</span><b class="status-pill '+(t.status==='Voltooid'?'done':t.status==='In uitvoering'?'busy':'')+'">'+esc(t.status)+'</b></div>'}).join('')+'<button class="btn light" onclick="MSF.selectTasksForProject('+p.id+')">Taken beheren</button></div></aside></section></main>'}
+function drawDetailMap(){var el=byId('detailMap');if(!el||typeof L==='undefined')return;if(S.detailMap){S.detailMap.remove();S.detailMap=null}var p=project(S.selectedProject), c=coordsForProject(p);S.detailMap=L.map('detailMap').setView(c,15);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(S.detailMap);L.marker(c).addTo(S.detailMap).bindPopup('<b>'+esc(p.name)+'</b><br>'+esc(fullAddress(p))).openPopup()}
+function tasksPage(){var ps=qProjects();var tasks=TASKS.filter(function(t){var ok=true;if(S.taskMember!=='all')ok=ok&&String(t.assignee)===String(S.taskMember);if(S.taskProject!=='all')ok=ok&&String(t.project_id)===String(S.taskProject);return ok});return '<main class="page"><div class="hero"><div><h2>Takenoverzicht</h2><p>Filteren op medewerker en project werkt nu direct.</p></div><button class="btn orange" onclick="MSF.openModal(\'task\')">＋ Nieuwe taak</button></div><div class="toolbar"><label>Medewerker:</label><select onchange="MSF.setTaskMember(this.value)"><option value="all">Alle medewerkers</option>'+TEAM.map(function(m){return '<option value="'+m.id+'" '+(String(S.taskMember)===String(m.id)?'selected':'')+'>'+esc(m.name)+'</option>'}).join('')+'</select><label>Project:</label><select onchange="MSF.setTaskProject(this.value)"><option value="all">Alle projecten</option>'+PROJECTS.map(function(p){return '<option value="'+p.id+'" '+(String(S.taskProject)===String(p.id)?'selected':'')+'>'+esc(p.name)+'</option>'}).join('')+'</select><button class="btn light" onclick="MSF.clearTaskFilters()">Wis filters</button></div><section class="tasks-layout"><div class="card sidebar"><h3>Projecten</h3>'+ps.map(function(p){return '<div class="mini-project '+(String(S.taskProject)===String(p.id)?'on':'')+'" onclick="MSF.setTaskProject('+p.id+')"><img src="'+esc(staticMapUrl(p,160,120,14))+'"><div><b>'+esc(p.name)+'</b><br><small>'+esc(p.city)+'</small><br><span class="badge '+p.status.toLowerCase()+'">'+esc(p.status)+'</span></div></div>'}).join('')+'</div><div class="card tablewrap"><h3>Gefilterde taken ('+tasks.length+')</h3><table class="table"><thead><tr><th>Af</th><th>Taak</th><th>Project</th><th>Medewerker</th><th>Deadline</th><th>Status</th><th>Prioriteit</th><th>Acties</th></tr></thead><tbody>'+tasks.map(taskRow).join('')+'</tbody></table></div></section></main>'}
+function taskRow(t){var m=person(t.assignee);return '<tr><td><input type="checkbox" '+(t.status==='Voltooid'?'checked':'')+' onchange="MSF.toggleTask('+t.id+',this.checked)"></td><td>'+esc(t.title)+'</td><td>'+esc(project(t.project_id).name)+'</td><td>'+avatar(m)+' '+esc(m.name)+'</td><td>'+fmt(t.deadline)+'</td><td><span class="status-pill '+(t.status==='Voltooid'?'done':t.status==='In uitvoering'?'busy':'')+'">'+esc(t.status)+'</span></td><td><i class="prio '+(t.priority==='Hoog'?'high':'')+'"></i>'+esc(t.priority)+'</td><td><button class="iconbtn" onclick="MSF.editTask('+t.id+')">✎</button> <button class="iconbtn danger" onclick="MSF.deleteTask('+t.id+')">🗑</button></td></tr>'}
+function chatPage(){return '<main class="page"><div class="hero"><div><h2>Messages</h2><p>Teamchat is weer werkbaar. Berichten blijven lokaal bewaard.</p></div></div><section class="chat-layout"><div class="card chat-users"><h3>Kanalen</h3><div class="chat-person on"><span class="bubble">TC</span><b>Teamchat</b></div>'+TEAM.map(function(m){return '<div class="chat-person"><span>'+avatar(m)+'</span><div><b>'+esc(m.name)+'</b><br><small>'+esc(m.role)+'</small></div></div>'}).join('')+'</div><div class="card chat-main"><div class="chat-stream" id="chatStream">'+MESSAGES.map(function(msg){var m=person(msg.user), me=S.user&&msg.user===S.user.id;return '<div class="msg '+(me?'me':'')+'">'+avatar(m)+'<div class="bubble-msg"><b>'+esc(me?'Jij':m.name)+'</b> <small>'+esc(msg.time)+'</small><br>'+esc(msg.text)+'</div></div>'}).join('')+'</div><div class="chat-input"><textarea id="chatText" placeholder="Typ een bericht... Enter = versturen, Shift+Enter = nieuwe regel" onkeydown="if(event.key===&quot;Enter&quot;&&!event.shiftKey){event.preventDefault();MSF.sendChat()}"></textarea><button class="btn orange" onclick="MSF.sendChat()">Stuur</button></div></div></section></main>'}
+function teamPage(){return '<main class="page"><div class="hero"><div><h2>Team</h2><p>Overzicht van medewerkers.</p></div><button class="btn orange" onclick="MSF.openModal(\'member\')">＋ Teamlid</button></div><div class="card tablewrap"><table class="table"><thead><tr><th>Naam</th><th>Functie</th><th>E-mail</th><th>Admin</th><th>Acties</th></tr></thead><tbody>'+TEAM.map(function(m){return '<tr><td>'+avatar(m)+' '+esc(m.name)+'</td><td>'+esc(m.role)+'</td><td>'+esc(m.email)+'</td><td>'+(m.admin?'Ja':'Nee')+'</td><td><button class="iconbtn" onclick="MSF.editMember('+m.id+')">✎</button></td></tr>'}).join('')+'</tbody></table></div></main>'}
+function reportsPage(){return '<main class="page"><div class="hero"><div><h2>Rapporten</h2><p>Export en rapportage.</p></div></div><section class="kpi-grid"><div class="card kpi"><small>Projectwaarde indicatie</small><strong>€ '+(PROJECTS.length*18500).toLocaleString('nl-NL')+'</strong></div><div class="card kpi"><small>Open taken</small><strong>'+TASKS.filter(function(t){return t.status!=='Voltooid'}).length+'</strong></div><div class="card kpi"><small>Afgerond</small><strong>'+stat('Afgerond')+'</strong></div><div class="card kpi"><small>Teamleden</small><strong>'+TEAM.length+'</strong></div></section><div class="card panel"><button class="btn orange" onclick="MSF.exportData()">Data exporteren</button> <button class="btn light" onclick="window.print()">Print / PDF</button></div></main>'}
+function adminPage(){return '<main class="page"><div class="hero"><div><h2>Beheer</h2><p>De beheerpagina-acties werken nu op lokale data.</p></div></div><section class="admin-grid"><div class="card admin-box"><h3>Snel overzicht</h3><div class="quick-stats"><div class="quick"><strong>'+TEAM.length+'</strong><small>Teamleden</small></div><div class="quick"><strong>'+PROJECTS.length+'</strong><small>Projecten</small></div><div class="quick"><strong>'+TASKS.length+'</strong><small>Taken</small></div><div class="quick"><strong>'+TEMPLATES.length+'</strong><small>Sjablonen</small></div></div><h3 style="margin-top:18px">Snelle acties</h3><div class="action-list"><button onclick="MSF.openModal(\'member\')">👥 Teamlid toevoegen <span>›</span></button><button onclick="MSF.openModal(\'template\')">▣ Sjabloon toevoegen <span>›</span></button><button onclick="MSF.openModal(\'role\')">♧ Rol toevoegen <span>›</span></button><button onclick="MSF.exportData()">⇩ Backup exporteren <span>›</span></button><button onclick="MSF.resetAll()">↺ Reset testdata <span>›</span></button></div></div><div class="card admin-box"><h3>Teamleden</h3><div class="admin-table-scroll"><table class="admin-table"><thead><tr><th>Naam</th><th>Rol</th><th>E-mail</th><th>Acties</th></tr></thead><tbody>'+TEAM.map(function(m){return '<tr><td>'+avatar(m)+' '+esc(m.name)+'</td><td>'+esc(m.role)+'</td><td>'+esc(m.email)+'</td><td><button class="iconbtn" onclick="MSF.editMember('+m.id+')">✎</button> <button class="iconbtn danger" onclick="MSF.deleteMember('+m.id+')">🗑</button></td></tr>'}).join('')+'</tbody></table></div><h3 style="margin-top:18px">Sjablonen</h3>'+TEMPLATES.map(function(t,i){return '<div class="line"><span><b>'+esc(t.name)+'</b><br><small>'+esc(t.type)+' • '+t.items.length+' onderdelen</small></span><span><button class="iconbtn" onclick="MSF.editTemplate('+i+')">✎</button> <button class="iconbtn danger" onclick="MSF.deleteTemplate('+i+')">🗑</button></span></div>'}).join('')+'</div><div class="card admin-box"><h3>Rollen & rechten</h3>'+ROLES.map(function(r,i){return '<div class="line"><span><b>'+esc(r.name)+'</b><br><small>'+esc(r.rights.join(', '))+'</small></span><button class="iconbtn" onclick="MSF.editRole('+i+')">✎</button></div>'}).join('')+'<h3 style="margin-top:18px">Integraties</h3><div class="line"><span>Bouw7</span><b>Roadmap</b></div><div class="line"><span>Google Drive</span><b class="pill green">Voorbereid</b></div><div class="line"><span>Supabase</span><b class="pill green">Fallback lokaal</b></div></div></section><div class="footer">MSF Projecten v24 · Beheeromgeving</div></main>'}
+
+function modalHtml(){if(!S.modal)return '';if(S.modal==='project')return projectModal();if(S.modal==='task')return taskModal();if(S.modal==='member')return memberModal();if(S.modal==='template')return templateModal();if(S.modal==='role')return roleModal();return ''}
+function modalShell(title,body){return '<div class="modal-bg"><div class="modal"><div class="modal-title"><h3>'+esc(title)+'</h3><button class="round" style="width:38px;height:38px" onclick="MSF.closeModal()">×</button></div><div class="modal-body">'+body+'</div></div></div>'}
+function projectModal(){var p=S.editing||{name:'',address:'',postcode:'',city:'',status:'Gepland',progress:0,start:'',end:'',notes:'',assignees:S.user?[S.user.id]:[]};var body='<div class="street-preview"><img id="streetPreview" src="'+esc(projectVisual(p))+'" onerror="this.onerror=null;this.src=\''+esc(staticMapUrl(p,600,300,15))+'\'"></div><div class="field"><label>Projectnaam</label><input id="pName" value="'+esc(p.name)+'"></div><div class="field"><label>Adres</label><input id="pAddress" value="'+esc(p.address)+'" oninput="MSF.previewProjectAddress()"></div><div class="form-grid"><div class="field"><label>Postcode</label><input id="pPostcode" value="'+esc(p.postcode)+'" oninput="MSF.autoCity();MSF.previewProjectAddress()"></div><div class="field"><label>Woonplaats</label><input id="pCity" value="'+esc(p.city)+'" oninput="MSF.previewProjectAddress()"></div></div><div class="form-grid"><div class="field"><label>Start</label><input type="date" id="pStart" value="'+esc(p.start)+'"></div><div class="field"><label>Einde</label><input type="date" id="pEnd" value="'+esc(p.end)+'"></div></div><div class="form-grid"><div class="field"><label>Status</label><select id="pStatus"><option '+(p.status==='Actief'?'selected':'')+'>Actief</option><option '+(p.status==='Gepland'?'selected':'')+'>Gepland</option><option '+(p.status==='Afgerond'?'selected':'')+'>Afgerond</option></select></div><div class="field"><label>Voortgang</label><input type="number" min="0" max="100" id="pProgress" value="'+Number(p.progress||0)+'"></div></div><div class="field"><label>Teamleden</label><select id="pAssignees" multiple style="height:110px">'+TEAM.map(function(m){return '<option value="'+m.id+'" '+((p.assignees||[]).indexOf(m.id)>-1?'selected':'')+'>'+esc(m.name)+'</option>'}).join('')+'</select></div><div class="field"><label>Notities</label><textarea id="pNotes">'+esc(p.notes)+'</textarea></div><div class="modal-actions"><button class="btn orange" style="flex:1" onclick="MSF.saveProject()">Opslaan</button><button class="btn light" onclick="MSF.closeModal()">Annuleren</button></div>';return modalShell(p.id?'Project bewerken':'Nieuw project',body)}
+function taskModal(){var t=S.editing||{title:'',project_id:S.taskProject==='all'?(PROJECTS[0]&&PROJECTS[0].id):S.taskProject,assignee:S.taskMember==='all'?(S.user&&S.user.id):S.taskMember,deadline:'',priority:'Normaal',status:'Te doen'};var body='<div class="field"><label>Taak</label><input id="tTitle" value="'+esc(t.title)+'"></div><div class="form-grid"><div class="field"><label>Project</label><select id="tProject">'+PROJECTS.map(function(p){return '<option value="'+p.id+'" '+(String(t.project_id)===String(p.id)?'selected':'')+'>'+esc(p.name)+'</option>'}).join('')+'</select></div><div class="field"><label>Toegewezen aan</label><select id="tAssignee">'+TEAM.map(function(m){return '<option value="'+m.id+'" '+(String(t.assignee)===String(m.id)?'selected':'')+'>'+esc(m.name)+'</option>'}).join('')+'</select></div></div><div class="form-grid"><div class="field"><label>Deadline</label><input type="date" id="tDeadline" value="'+esc(t.deadline)+'"></div><div class="field"><label>Status</label><select id="tStatus"><option '+(t.status==='Te doen'?'selected':'')+'>Te doen</option><option '+(t.status==='In uitvoering'?'selected':'')+'>In uitvoering</option><option '+(t.status==='Voltooid'?'selected':'')+'>Voltooid</option></select></div></div><div class="field"><label>Prioriteit</label><select id="tPriority"><option '+(t.priority==='Normaal'?'selected':'')+'>Normaal</option><option '+(t.priority==='Hoog'?'selected':'')+'>Hoog</option></select></div><div class="modal-actions"><button class="btn orange" style="flex:1" onclick="MSF.saveTask()">Opslaan</button><button class="btn light" onclick="MSF.closeModal()">Annuleren</button></div>';return modalShell(t.id?'Taak bewerken':'Nieuwe taak',body)}
+function memberModal(){var m=S.editing||{name:'',role:'Medewerker',email:'',pw:'msf-nieuw2026',admin:false,color:'#123d72',av:'??'};var body='<div class="field"><label>Naam</label><input id="mName" value="'+esc(m.name)+'"></div><div class="field"><label>Functie</label><input id="mRole" value="'+esc(m.role)+'"></div><div class="field"><label>E-mail</label><input id="mEmail" value="'+esc(m.email)+'"></div><div class="field"><label>Wachtwoord</label><input id="mPw" value="'+esc(m.pw)+'"></div><label class="field"><input type="checkbox" id="mAdmin" '+(m.admin?'checked':'')+'> Beheerder</label><div class="modal-actions"><button class="btn orange" style="flex:1" onclick="MSF.saveMember()">Opslaan</button><button class="btn light" onclick="MSF.closeModal()">Annuleren</button></div>';return modalShell(m.id?'Teamlid bewerken':'Teamlid toevoegen',body)}
+function templateModal(){var t=S.editing||{name:'',type:'Taak',items:[]};var body='<div class="field"><label>Naam</label><input id="tplName" value="'+esc(t.name)+'"></div><div class="field"><label>Type</label><select id="tplType"><option '+(t.type==='Taak'?'selected':'')+'>Taak</option><option '+(t.type==='Project'?'selected':'')+'>Project</option></select></div><div class="field"><label>Onderdelen, één per regel</label><textarea id="tplItems">'+esc((t.items||[]).join('\n'))+'</textarea></div><div class="modal-actions"><button class="btn orange" style="flex:1" onclick="MSF.saveTemplate()">Opslaan</button><button class="btn light" onclick="MSF.closeModal()">Annuleren</button></div>';return modalShell('Sjabloon',body)}
+function roleModal(){var r=S.editing||{name:'',rights:[]};var body='<div class="field"><label>Rolnaam</label><input id="roleName" value="'+esc(r.name)+'"></div><div class="field"><label>Rechten, één per regel</label><textarea id="roleRights">'+esc((r.rights||[]).join('\n'))+'</textarea></div><div class="modal-actions"><button class="btn orange" style="flex:1" onclick="MSF.saveRole()">Opslaan</button><button class="btn light" onclick="MSF.closeModal()">Annuleren</button></div>';return modalShell('Rol & rechten',body)}
+
+window.MSF={
+selLogin:function(id){S.loginSel=id;S.loginErr='';renderLogin();setTimeout(function(){var i=byId('loginPw');if(i)i.focus()},20)},
+doLogin:function(){var u=person(S.loginSel), pw=(byId('loginPw')||{}).value||'';if(pw===u.pw){if(u.id===4){u.admin=true;u.role='Beheerder / Calculator / Planvoorbereider';}var mem=load('login_memory',{});if(byId('rememberPw')&&byId('rememberPw').checked)mem[u.id]=pw;else delete mem[u.id];save('login_memory',mem);S.user=u;save('last_user',u.id);byId('splash').style.display='none';render()}else{S.loginErr='Onjuist wachtwoord.';renderLogin()}},
+logout:function(){S.user=null;save('last_user',null);renderLogin()},
+go:function(p){S.page=p;render()},
+openProject:function(id){S.selectedProject=id;S.page='project';render()},
+toggleNotifs:function(){S.showNotifs=!S.showNotifs;render()},
+markRead:function(){visibleNotifs().forEach(function(n){n.read=true});persist();S.showNotifs=false;render()},
+openModal:function(m){S.editing=null;S.modal=m;render()},
+closeModal:function(){S.modal=null;S.editing=null;render()},
+editProject:function(id){S.editing=JSON.parse(JSON.stringify(project(id)));S.modal='project';render()},
+previewProjectAddress:function(){var p={address:(byId('pAddress')||{}).value||'',postcode:(byId('pPostcode')||{}).value||'',city:(byId('pCity')||{}).value||''};var img=byId('streetPreview');if(img){img.src=projectVisual(p);img.onerror=function(){this.onerror=null;this.src=staticMapUrl(p,600,300,15)}}},
+autoCity:function(){var pc=byId('pPostcode'), city=byId('pCity');if(pc&&city&&!city.value.trim()){city.value=cityFromPostcode(pc.value)}},
+saveProject:function(){var p=S.editing||{id:Date.now()};p.name=byId('pName').value.trim()||'Nieuw project';p.address=byId('pAddress').value.trim();p.postcode=byId('pPostcode').value.trim().toUpperCase();p.city=normalizeCity(byId('pCity').value.trim()||cityFromPostcode(p.postcode));p.start=byId('pStart').value;p.end=byId('pEnd').value;p.status=byId('pStatus').value;p.progress=Math.max(0,Math.min(100,parseInt(byId('pProgress').value||0,10)));p.notes=byId('pNotes').value;p.assignees=Array.from(byId('pAssignees').selectedOptions).map(function(o){return parseInt(o.value,10)});var idx=PROJECTS.findIndex(function(x){return x.id===p.id});var isNew=idx<0;if(idx>=0)PROJECTS[idx]=p;else PROJECTS.unshift(p);if(isNew){(p.assignees||[]).forEach(function(uid){addNotif('Nieuw project toegewezen: '+p.name,uid,true);});}else{(p.assignees||[]).forEach(function(uid){addNotif('Project toegewezen/bijgewerkt: '+p.name,uid,false);});}persist();S.modal=null;S.editing=null;toast('Project opgeslagen');render()},
+setTaskMember:function(v){S.taskMember=v;renderPageOnly()},
+setTaskProject:function(v){S.taskProject=v;renderPageOnly()},
+clearTaskFilters:function(){S.taskMember='all';S.taskProject='all';renderPageOnly()},
+selectTasksForProject:function(id){S.taskProject=id;S.page='tasks';render()},
+editTask:function(id){S.editing=JSON.parse(JSON.stringify(TASKS.find(function(t){return t.id===id})));S.modal='task';render()},
+saveTask:function(){var t=S.editing||{id:Date.now()};var old=TASKS.find(function(x){return x.id===t.id});t.title=byId('tTitle').value.trim()||'Nieuwe taak';t.project_id=parseInt(byId('tProject').value,10);t.assignee=parseInt(byId('tAssignee').value,10);t.deadline=byId('tDeadline').value;t.status=byId('tStatus').value;t.priority=byId('tPriority').value;var idx=TASKS.findIndex(function(x){return x.id===t.id});if(idx>=0)TASKS[idx]=t;else TASKS.push(t);if(!old||old.assignee!==t.assignee){addNotif('Taak toegewezen: '+t.title,t.assignee,true)}if(old&&old.status!==t.status&&t.status==='Voltooid'){addNotif('Taak afgevinkt: '+t.title,null,true)}persist();S.modal=null;S.editing=null;toast('Taak opgeslagen');render()},
+toggleTask:function(id,checked){var t=TASKS.find(function(x){return x.id===id});if(!t)return;t.status=checked?'Voltooid':'Te doen';addNotif((checked?'Taak afgevinkt: ':'Taak heropend: ')+t.title,null,true);persist();renderPageOnly()},
+deleteTask:function(id){if(confirm('Taak verwijderen?')){TASKS=TASKS.filter(function(t){return t.id!==id});persist();renderPageOnly()}},
+sendChat:function(){var txt=(byId('chatText')||{}).value||'';txt=txt.trim();if(!txt)return;MESSAGES.push({id:Date.now(),user:S.user.id,text:txt,time:now()});addNotif(S.user.name.split(' ')[0]+' stuurde een teamchatbericht',null,true);persist();render();setTimeout(function(){var s=byId('chatStream');if(s)s.scrollTop=s.scrollHeight},40)},
+editMember:function(id){S.editing=JSON.parse(JSON.stringify(person(id)));S.modal='member';render()},
+saveMember:function(){var m=S.editing||{id:Date.now(),color:'#123d72'};m.name=byId('mName').value.trim()||'Nieuw teamlid';m.role=byId('mRole').value.trim()||'Medewerker';m.email=byId('mEmail').value.trim();m.pw=byId('mPw').value.trim()||'msf-nieuw2026';m.admin=byId('mAdmin').checked;m.av=m.name.split(' ').map(function(x){return x[0]}).join('').slice(0,2).toUpperCase();var idx=TEAM.findIndex(function(x){return x.id===m.id});if(idx>=0)TEAM[idx]=m;else TEAM.push(m);persist();S.modal=null;S.editing=null;toast('Teamlid opgeslagen');render()},
+deleteMember:function(id){if(id===S.user.id){toast('Je kunt jezelf niet verwijderen');return}if(confirm('Teamlid verwijderen?')){TEAM=TEAM.filter(function(m){return m.id!==id});TASKS.forEach(function(t){if(t.assignee===id)t.assignee=S.user.id});persist();render()}},
+editTemplate:function(i){S.editIndex=i;S.editing=JSON.parse(JSON.stringify(TEMPLATES[i]));S.modal='template';render()},
+saveTemplate:function(){var t={name:byId('tplName').value.trim()||'Nieuw sjabloon',type:byId('tplType').value,items:byId('tplItems').value.split('\n').map(function(x){return x.trim()}).filter(Boolean)};if(typeof S.editIndex==='number')TEMPLATES[S.editIndex]=t;else TEMPLATES.push(t);S.editIndex=null;S.modal=null;persist();toast('Sjabloon opgeslagen');render()},
+deleteTemplate:function(i){if(confirm('Sjabloon verwijderen?')){TEMPLATES.splice(i,1);persist();render()}},
+editRole:function(i){S.editIndex=i;S.editing=JSON.parse(JSON.stringify(ROLES[i]));S.modal='role';render()},
+saveRole:function(){var r={name:byId('roleName').value.trim()||'Nieuwe rol',rights:byId('roleRights').value.split('\n').map(function(x){return x.trim()}).filter(Boolean)};if(typeof S.editIndex==='number')ROLES[S.editIndex]=r;else ROLES.push(r);S.editIndex=null;S.modal=null;persist();toast('Rol opgeslagen');render()},
+exportData:function(){var data={team:TEAM,projects:PROJECTS,tasks:TASKS,messages:MESSAGES,templates:TEMPLATES,roles:ROLES,notifs:S.notifs};var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='msf-backup.json';a.click();URL.revokeObjectURL(a.href)},
+resetAll:function(){if(confirm('Alle lokale data resetten naar testdata?')){TEAM=TEAM_DEFAULT.slice();PROJECTS=PROJECTS_DEFAULT.slice();TASKS=TASKS_DEFAULT.slice();MESSAGES=[];TEMPLATES=TEMPLATES_DEFAULT.slice();ROLES=ROLES_DEFAULT.slice();S.notifs=[];persist();toast('Data gereset');render()}},
+openChat:function(key){
+  S.chatChannel=key||'team';
+  render();
+  setTimeout(function(){
+    var stream=document.getElementById('messagesStream');
+    if(stream)stream.scrollTop=stream.scrollHeight;
+  },50);
+},
+
+openChatChannel:function(channel){
+  S.chatChannel=String(channel||'team');
+  render();
+},
+deleteMessage:function(id){
+  var msgs=msfChatMessages();
+  var msg=msgs.find(function(m){return m.id===id;});
+  if(!msg)return;
+  if(!msfCanDeleteMessage(msg)){
+    toast('Je kunt alleen je eigen berichten verwijderen');
+    return;
+  }
+  msgs=msgs.filter(function(m){return m.id!==id;});
+  msfSaveChatMessages(msgs);
+  toast('Bericht verwijderd');
+  render();
+},
+sendMessage:function(){
+  var input=document.getElementById('messageText');
+  var fileInput=document.getElementById('messageImage');
+  if(!input)return;
+  var text=input.value.trim();
+  var file=fileInput && fileInput.files && fileInput.files[0];
+
+  if(!text && !file){
+    toast('Typ een bericht of kies een foto');
+    return;
+  }
+
+  msfReadFileAsDataUrl(file,function(dataUrl){
+    var msgs=msfChatMessages();
+    msgs.push({
+      id:Date.now(),
+      channel:S.chatChannel||'team',
+      user:S.user?S.user.id:4,
+      time:new Date().toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'}),
+      text:text,
+      image:dataUrl||null
+    });
+    msfSaveChatMessages(msgs);
+    addNotif('Nieuw chatbericht'+(dataUrl?' met foto':'')+': '+(text||'foto'),null,true);
+    input.value='';
+    if(fileInput)fileInput.value='';
+    render();
+    setTimeout(function(){
+      var stream=document.getElementById('messagesStream');
+      if(stream)stream.scrollTop=stream.scrollHeight;
+    },50);
+  });
+}
+};
+
+setTimeout(function(){byId('splash').style.display='none';var last=load('last_user',null);if(last){S.user=person(last);render()}else renderLogin()},400);
+})();
+</script>
+</body>
+</html>
